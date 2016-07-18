@@ -1,0 +1,30 @@
+{
+  "name": "albopop-enhanced",
+  "version": "0.0.1",
+  "description": "AlboPOP remix",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://gitlab@gitlab.dataninja.it:51666/pieroit/AlboPOP-enhanced.git"
+  },
+  "keywords": [
+    "albopop",
+    "albo",
+    "pretorio",
+    "dataninja",
+    "open",
+    "data"
+  ],
+  "author": "dataninja",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "d3": "^4.1.1",
+    "jquery": "^3.1.0",
+    "leaflet": "^0.7.7",
+    "underscore": "^1.8.3"
+  }
+}
