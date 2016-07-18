@@ -32,22 +32,27 @@ $(document).ready(function(){
     $.get('assets/italy-regions.json', {}, drawMap);
     
     // build word cloud
+    var cloudWords = $('#howto').text().split(' ');
+    var wordCounts = _.reduce(cloudWords, function(memo, w){
+        if( _.has(memo, w) ){
+            memo[w] += 1;
+        } else {
+            memo[w] = 1;
+        }
+        return memo;
+        
+    }, {});
+    wordCounts = _.map(wordCounts, function(wc, w){
+        return {
+            text: w,
+            size: wc * 10
+        }
+    });
+    
+    var cloudSize = $('#word-cloud-container').width();
     albopop.cloudLayout = d3.layout.cloud()
-        .size([300,300])
-        .words([
-            {
-                text: 'ciao',
-                size: 12.0
-            },
-            {
-                text: 'begli',
-                size: 10.0
-            },
-            {
-                text: 'imbusti',
-                size: 20.0
-            },
-        ])
+        .size([cloudSize, cloudSize])
+        .words(wordCounts)
         .fontSize(function(d) { return d.size; })
         .rotate(0)
         .padding(5)
@@ -92,7 +97,6 @@ function drawCloud(words){
         .enter()
         .append('text')
         .attr('transform', function(d){
-            console.log(d);
             return 'translate(' + [d.x, d.y] + ')rotate(' + d.rotate + ')';
         })
         .attr('text-anchor', 'middle')

@@ -1,3 +1,7 @@
 #map-container {
     height: 500px;
 }
+
+.leaflet-container {
+    background-color:rgba(255,0,0,0.0);
+}
