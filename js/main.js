@@ -32,7 +32,27 @@ $(document).ready(function(){
     $.get('assets/italy-regions.json', {}, drawMap);
     
     // build word cloud
-    albopop.wordCloud = 
+    albopop.cloudLayout = d3.layout.cloud()
+        .size([300,300])
+        .words([
+            {
+                text: 'ciao',
+                size: 12.0
+            },
+            {
+                text: 'begli',
+                size: 10.0
+            },
+            {
+                text: 'imbusti',
+                size: 20.0
+            },
+        ])
+        .fontSize(function(d) { return d.size; })
+        .rotate(0)
+        .padding(5)
+        .on('end', drawCloud);
+    albopop.cloudLayout.start();    // method 'start' not chainable (returns undefined)
 });
 
 function drawMap(italyGeoJSON){
@@ -55,5 +75,33 @@ function drawMap(italyGeoJSON){
     _.each(albopop.poi, function(p){
         var marker = L.marker(p.coords).addTo(albopop.map);
         marker.bindPopup(p.name);
-});
+    });
+}
+
+function drawCloud(words){
+    
+    var layout = albopop.cloudLayout;
+    
+    d3.select('#word-cloud-container').append('svg')
+        .attr('width', layout.size()[0])
+        .attr('height', layout.size()[1])
+        .append('g')
+        .attr('transform', 'translate(' + layout.size()[0]/2 + ',' + layout.size()[1]/2 + ')')
+        .selectAll('text')
+        .data(words)
+        .enter()
+        .append('text')
+        .attr('transform', function(d){
+            console.log(d);
+            return 'translate(' + [d.x, d.y] + ')rotate(' + d.rotate + ')';
+        })
+        .attr('text-anchor', 'middle')
+        .style('font-size', function(d){
+            return d.size;
+        })
+        .style('fill', function(d, i){
+            var colorIndex = i % 20;
+            return d3.schemeCategory20[colorIndex];
+        })
+        .text(function(d){ return d.text });
 }
