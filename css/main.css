@@ -5,3 +5,8 @@
 .leaflet-container {
     background-color:rgba(255,0,0,0.0);
 }
+
+#search-results {
+    max-height: 300px;
+    overflow-y: scroll;
+}

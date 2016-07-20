@@ -42,7 +42,7 @@ $(document).ready(function(){
         
         // ask elasticsearch
         albopop.elastic.search({
-            index: "albopop-v2-*",
+            index: "albopop-v3-*",
             type: "rss_item",
             body: composeQuery(query)
         }, function(error, response){
@@ -103,6 +103,18 @@ function updateColumn(event){
     });
     var cityWords = cityData.words.buckets;
     var cityDocs  = cityData.hits.hits.hits;
+    
+    // populate articles list
+    $('#search-results').empty();
+    _.each(cityDocs, function(doc){
+        console.log(doc);
+        $('#search-results').append(
+            '<div>' +
+                //'<h4>' + doc._source.message + '</h4>' +
+                '<p>' + doc._source.title + '</p>' +
+            '</div><hr/>' 
+        );
+    });
     
     // build word cloud
     var cloudSize = $('#word-cloud-container').width();
