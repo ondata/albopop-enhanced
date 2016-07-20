@@ -1,0 +1,13 @@
+This query was used to get italian Comuni and their coordinates:
+
+=============================================================
+select distinct * where 
+{
+    ?s a <http://dati.isprambiente.it/ontology/core#GeoFeature> .
+    ?s <http://www.w3.org/2000/01/rdf-schema#label> ?label .
+    ?s <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?lat .
+    ?s <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?lon .
+} ORDER BY ?label
+==============================================================
+
+Run against http://dati.isprambiente.it/sparql

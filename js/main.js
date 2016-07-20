@@ -1,28 +1,5 @@
 
-var albopop = {
-    poi: [
-        {
-            'name': 'Roma',
-            'coords': [41.9, 12.5],
-        },
-        {
-            'name': 'Firenze',
-            'coords': [43.78, 11.25],
-        },
-        {
-            'name': 'Genova',
-            'coords': [44.41, 8.93],
-        },
-        {
-            'name': 'Bologna',
-            'coords': [44.49, 11.34],
-        },
-        {
-            'name': 'Napoli',
-            'coords': [40.85, 14.26],
-        },
-    ],
-};
+var albopop = {};
     
 
 $(document).ready(function(){
@@ -41,33 +18,15 @@ $(document).ready(function(){
     albopop.map = L.map('map-container').setView([41.9, 12.5], 5);
     $.get('assets/italy-regions.json', {}, drawMap);
     
-    // build word cloud
-    var cloudWords = $('#howto').text().split(' ');
-    var wordCounts = _.reduce(cloudWords, function(memo, w){
-        if( _.has(memo, w) ){
-            memo[w] += 1;
-        } else {
-            memo[w] = 1;
-        }
-        return memo;
-        
-    }, {});
-    wordCounts = _.map(wordCounts, function(wc, w){
-        return {
-            text: w,
-            size: wc * 10
+    // load Comuni and their coordinates
+    d3.csv('assets/comuni.csv', function(comuni){
+        if(comuni){
+            albopop.poi = comuni.reduce(function(memo, c){
+                memo[c.label] = c;
+                return memo;
+            }, {});
         }
     });
-    
-    var cloudSize = $('#word-cloud-container').width();
-    albopop.cloudLayout = d3.layout.cloud()
-        .size([cloudSize, cloudSize])
-        .words(wordCounts)
-        .fontSize(function(d) { return d.size; })
-        .rotate(0)
-        .padding(5)
-        .on('end', drawCloud);
-    albopop.cloudLayout.start();    // method 'start' not chainable (returns undefined)
     
     // events
     $('#search').change(function(){
@@ -83,22 +42,84 @@ $(document).ready(function(){
         
         // ask elasticsearch
         albopop.elastic.search({
+            index: "albopop-v2-*",
+            type: "rss_item",
             body: composeQuery(query)
         }, function(error, response){
             if(error){
                 console.error(error);
-            } else {
-                console.log(response);
             }
+            console.log(response);
             
             // close loading modal
             $('#loading-modal').modal('hide');
+            
+            // store data for word clouds and docs list
+            albopop.data = {
+                generalWordCloud: response.aggregations.words.buckets,
+                citiesWordClouds: response.aggregations.locations.buckets
+            };
+            
+            // update UI
+            updateAll();
         });
         
     });
     // launch first click automagically
     $('#search').change();
 });
+
+function updateAll(){
+    
+    // delete old markers
+    _.each(albopop.markers, function(m){
+        albopop.map.removeLayer(m);
+    });
+    albopop.markers = [];
+    
+    // draw new markers
+    _.each(albopop.data.citiesWordClouds, function(city){
+        var cityName = city.key;
+        var cityLat  = albopop.poi[cityName].lat;
+        var cityLon  = albopop.poi[cityName].lon;
+        
+        var marker = L.marker(
+                [cityLat, cityLon],
+                {
+                    title: cityName
+                }
+        ).addTo(albopop.map);
+        marker.bindPopup(cityName);
+        marker.on('click', updateColumn);
+        albopop.markers.push(marker);
+    });
+}
+
+function updateColumn(event){
+    
+    var cityName = this.options.title;
+    var cityData = _.find(albopop.data.citiesWordClouds, function(c){
+        return (c.key == cityName);
+    });
+    var cityWords = cityData.words.buckets;
+    var cityDocs  = cityData.hits.hits.hits;
+    
+    // build word cloud
+    var cloudSize = $('#word-cloud-container').width();
+    albopop.cloudLayout = d3.layout.cloud()
+        .size([cloudSize, cloudSize])
+        .words(cityWords)
+        .text(function(d){
+            return d.key;
+        })
+        .fontSize(function(d) {
+            return d.score;// d.doc_count
+        })
+        .rotate(0)
+        .padding(5)
+        .on('end', drawCloud);
+    albopop.cloudLayout.start();    // method 'start' not chainable (returns undefined)
+}
 
 function drawMap(italyGeoJSON){
         
@@ -116,17 +137,13 @@ function drawMap(italyGeoJSON){
             }
         }
     }).addTo(albopop.map);
-
-    _.each(albopop.poi, function(p){
-        var marker = L.marker(p.coords).addTo(albopop.map);
-        marker.bindPopup(p.name);
-    });
 }
 
 function drawCloud(words){
     
     var layout = albopop.cloudLayout;
     
+    $('#word-cloud-container svg').remove();
     d3.select('#word-cloud-container').append('svg')
         .attr('width', layout.size()[0])
         .attr('height', layout.size()[1])
