@@ -44,7 +44,7 @@ function fromEs($search,$location,$size) {
 
 	$today = new DateTime();
     $fifteendaysago = (new DateTime())->add(DateInterval::createFromDateString('15 days ago'));
-	$prefix = "albopop-v2";
+	$prefix = "albopop-v3";
     $indices = [];
     $dts = new DatePeriod(
         $fifteendaysago,
