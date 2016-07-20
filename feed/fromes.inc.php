@@ -64,8 +64,9 @@ function fromEs($search,$location,$size) {
 	$body["sort"] = [ [ "@timestamp" => "desc" ] ];
 
 	$params = [
-		"index" => "albopop-v2-*", //join(",",$indices),
-		"type" => "rss_item",
+		"index" => join(",",$indices),
+        "type" => "rss_item",
+        "ignore_unavailable" => true,
 		"body" => $body
 	];
 

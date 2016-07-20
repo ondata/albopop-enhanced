@@ -40,9 +40,13 @@ function toRss($results) {
             }
         }
 
+        if (strpos(parse_url($doc['link'], PHP_URL_PATH), '.pdf') !== false) {
+            $item->enclosure($doc['link'], rand(1000,10000), 'application/pdf');
+        }
+
 		$item
 			->guid($id)
-			->pubDate($doc['@timestamp'])
+			->pubDate(strtotime($doc['@timestamp']))
 			->url($doc['link'])
 			->appendTo($channel);
 
