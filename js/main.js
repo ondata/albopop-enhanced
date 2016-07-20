@@ -27,7 +27,7 @@ var albopop = {
 
 $(document).ready(function(){
     
-    // ping elasticsearch
+    // connect to elasticsearch
     albopop.elastic = new elasticsearch.Client({
         host: [{
             host: 'es.dataninja.it',
@@ -35,14 +35,6 @@ $(document).ready(function(){
             auth: 'albopop:albobob'
         }],
         log: 'info'
-    });
-    
-    albopop.elastic.search({
-        q: 'matrimoni'
-    }).then(function(body){
-        console.log(body);
-    }, function(error){
-        console.log(error);
     });
     
     // build and draw map
@@ -76,6 +68,36 @@ $(document).ready(function(){
         .padding(5)
         .on('end', drawCloud);
     albopop.cloudLayout.start();    // method 'start' not chainable (returns undefined)
+    
+    // events
+    $('#search').change(function(){
+        
+        // extract query
+        var query = $('#search').val();
+        
+        // loading...
+        $('#loading-modal').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+        
+        // ask elasticsearch
+        albopop.elastic.search({
+            body: composeQuery(query)
+        }, function(error, response){
+            if(error){
+                console.error(error);
+            } else {
+                console.log(response);
+            }
+            
+            // close loading modal
+            $('#loading-modal').modal('hide');
+        });
+        
+    });
+    // launch first click automagically
+    $('#search').change();
 });
 
 function drawMap(italyGeoJSON){

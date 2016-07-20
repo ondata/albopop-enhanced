@@ -7,18 +7,20 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" href="node_modules/leaflet/dist/leaflet.css">
         <link rel="stylesheet" href="css/main.css">
-
 
         <script src="node_modules/underscore/underscore-min.js"></script>
         <script src="node_modules/d3/build/d3.min.js"></script>
         <script src="node_modules/d3-scale/build/d3-scale.min.js"></script>
         <script src="node_modules/d3-cloud/build/d3.layout.cloud.js"></script>
         <script src="node_modules/jquery/dist/jquery.min.js"></script>
+        <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="node_modules/leaflet/dist/leaflet.js"></script>
         <!--<script src="node_modules/elasticsearch/src/elasticsearch.jquery.js"></script>-->
         <script src="js/elasticsearch.js"></script>
+        <script src="js/query.js"></script>
         <script src="js/main.js"></script>
     </head>
     
@@ -28,8 +30,8 @@
             <h2>AlboPOP enhanced by Dataninja</h2>
             <div id="howto">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</div>
             <div>
-                <input placeholder="search"/>
-                <span>RSS</span>
+                <input id="search" placeholder="cerca"/>
+                <i class="fa fa-2x fa-rss-square" aria-hidden="true"></i>
             </div>
         </div>
         
@@ -44,6 +46,15 @@
         </div>
         
         <div id="footer" class="row">Footer & creditz</div>
+        
+        <div id="loading-modal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div>Ricerca in corso ...</div>
+                    <i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>
+                </div>
+            </div>
+        </div>
     
     </body>
 </html>

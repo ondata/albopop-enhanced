@@ -24,7 +24,8 @@
     "bootstrap": "^3.3.6",
     "d3": "^4.1.1",
     "d3-cloud": "^1.2.1",
-    "jquery": "^3.1.0",
+    "font-awesome": "^4.6.3",
+    "jquery": "^2.2.4",
     "leaflet": "^0.7.7",
     "underscore": "^1.8.3"
   }
