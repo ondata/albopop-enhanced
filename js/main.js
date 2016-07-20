@@ -27,6 +27,24 @@ var albopop = {
 
 $(document).ready(function(){
     
+    // ping elasticsearch
+    albopop.elastic = new elasticsearch.Client({
+        host: [{
+            host: 'es.dataninja.it',
+            port: 80,
+            auth: 'albopop:albobob'
+        }],
+        log: 'info'
+    });
+    
+    albopop.elastic.search({
+        q: 'matrimoni'
+    }).then(function(body){
+        console.log(body);
+    }, function(error){
+        console.log(error);
+    });
+    
     // build and draw map
     albopop.map = L.map('map-container').setView([41.9, 12.5], 5);
     $.get('assets/italy-regions.json', {}, drawMap);
