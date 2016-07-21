@@ -6,17 +6,14 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Elasticsearch\Client;
 
-function fromEs($search,$location,$size) {
+function fromEs($search,$without,$location,$size) {
 
-    if ($search or $location) {
+    if ($search or $without or  $location) {
 
-        $query = [
-            "bool" => [
-                "must" => []
-            ]
-        ];
+        $query = [ "bool" => [] ];
 
         if ($search) {
+            $query['bool']['must'] = $query['bool']['must'] or [];
             $query['bool']['must'][] = [
                 "match" => [
                     "title" => $search
@@ -24,7 +21,17 @@ function fromEs($search,$location,$size) {
             ];
         }
 
+        if ($without) {
+            $query['bool']['must_not'] = $query['bool']['must_not'] or [];
+            $query['bool']['must_not'][] = [
+                "match" => [
+                    "title" => $without
+                ]
+            ];
+        }
+
         if ($location) {
+            $query['bool']['must'] = $query['bool']['must'] or [];
             $query['bool']['must'][] = [
                 "term" => [
                     "source.location" => $location
