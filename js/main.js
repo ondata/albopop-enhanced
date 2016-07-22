@@ -1,5 +1,17 @@
 
 var albopop = {};
+
+var nonClickedMarker = L.icon({
+    iconUrl: 'node_modules/leaflet/dist/images/marker-icon.png',
+    shadowUrl: 'node_modules/leaflet/dist/images/marker-shadow.png',
+    popupAnchor: [0, -35],
+});
+        
+var clickedMarker = L.icon({
+    iconUrl: 'assets/marker-icon-red.png',
+    shadowUrl: 'node_modules/leaflet/dist/images/marker-shadow.png',
+    popupAnchor: [0, -35],
+});
     
 
 $(document).ready(function(){
@@ -30,6 +42,9 @@ $(document).ready(function(){
     
     // events
     $('#search').change(function(){
+        
+        // clean up UI
+        cleanAll();
         
         // extract query
         var query = $('#search').val();
@@ -62,20 +77,28 @@ $(document).ready(function(){
             
             // update UI
             updateAll();
-        });
-        
+        });        
     });
     // launch first click automagically
     $('#search').change();
 });
 
-function updateAll(){
+function cleanAll(){
     
     // delete old markers
     _.each(albopop.markers, function(m){
         albopop.map.removeLayer(m);
     });
     albopop.markers = [];
+    
+    // delete cloud
+    $('#word-cloud-container svg').remove();
+    
+    // delete articles
+    $('#search-results').empty();
+}
+
+function updateAll(){
     
     // draw new markers
     _.each(albopop.data.citiesWordClouds, function(city){
@@ -90,13 +113,20 @@ function updateAll(){
                 }
         ).addTo(albopop.map);
         marker.bindPopup(cityName);
-        marker.on('click', updateColumn);
+        marker.on('click', markerClicked);
         albopop.markers.push(marker);
     });
 }
 
-function updateColumn(event){
+function markerClicked(event){
     
+    // highlight marker
+    _.each(albopop.markers, function(m){    // reset all markers' colors
+        m.setIcon(nonClickedMarker);
+    });
+    this.setIcon(clickedMarker);
+    
+    // prepare data
     var cityName = this.options.title;
     var cityData = _.find(albopop.data.citiesWordClouds, function(c){
         return (c.key == cityName);
@@ -107,7 +137,7 @@ function updateColumn(event){
     // populate articles list
     $('#search-results').empty();
     _.each(cityDocs, function(doc){
-        console.log(doc);
+        //console.log(doc);
         $('#search-results').append(
             '<div>' +
                 //'<h4>' + doc._source.message + '</h4>' +
