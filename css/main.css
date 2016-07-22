@@ -1,5 +1,5 @@
 #map-container {
-    height: 500px;
+  min-height: 300px;
 }
 
 .leaflet-container {
@@ -7,6 +7,6 @@
 }
 
 #search-results {
-    max-height: 300px;
+    min-height: 250px;
     overflow-y: scroll;
 }
