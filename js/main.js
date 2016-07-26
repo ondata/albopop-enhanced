@@ -26,9 +26,22 @@ $(function(){
         $wordcloud = $("#word-cloud-container"),
         $map = $("#map-container"),
         $list = $("#list-container"),
-        $modal = $("#loading-modal");
+        $modal = $("#loading-modal"),
+        $rss = $("#rss");
 
     $inputs.prop('disabled',true);
+    $inputs.on("input",updateRss);
+
+    function updateRss() {
+        var s = $must.val(),
+            w = $must_not.val(),
+            l = activeMarker;
+        $rss.attr("href", buildRss(s,w,l));
+    }
+
+    function buildRss(s,w,l) {
+        return "feed/?search="+(s||"")+"&without="+(w||"")+"&location="+(l||"");
+    }
     
     // connect to elasticsearch
     albopop.elastic = new elasticsearch.Client({
@@ -160,7 +173,7 @@ $(function(){
             var d = doc['_source'];
             $list.append(
                 '<a href="'+d.link+'" target="_blank" class="list-group-item">' +
-                    '<h4 class="list-group-item-heading">Da ' + d.source.title + ' il ' + d.updated + '</h4>' +
+                    '<h4 class="list-group-item-heading">Da ' + d.source.title + ' il ' + d['@timestamp'] + '</h4>' +
                     '<p class="list-group-item-text">' + d.title + '</p>' +
                     '<p class="list-group-item-tags">'+d.source.tags.map(function(t) { return '<span class="label label-info">'+t+'</span>'; })+'</p>' + 
                 '</a>' 
@@ -197,8 +210,8 @@ $(function(){
             m.setIcon(nonClickedMarker);
         });
 
-        if (activeMarker != this._leaflet_id) {
-            activeMarker = this._leaflet_id;
+        if (activeMarker != this.options.title) {
+            activeMarker = this.options.title;
             this.setIcon(clickedMarker);
             
             // prepare data
@@ -215,6 +228,8 @@ $(function(){
             activeMarker = null;
             updateAll();
         }
+
+        updateRss();
         
     }
 
