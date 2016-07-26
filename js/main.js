@@ -226,7 +226,8 @@ $(function(){
             populateCloud(cityWords);
         } else {
             activeMarker = null;
-            updateAll();
+            populateCloud(albopop.data.generalWordCloud);
+            populateList(albopop.data.generalListItems);
         }
 
         updateRss();
