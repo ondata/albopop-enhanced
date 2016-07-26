@@ -1,15 +1,33 @@
 var composeQuery = function(query){
     
-    if(!query){
+    if(!query || (!query.must && !query.must_not)){
+
         queryCommand = {
             "match_all": {}
-        }
+        };
+
     } else {
+
         queryCommand = {
-            "match": {
-                "title": query
-            }
+            "bool": {}
+        };
+
+        if(query.must) {
+            queryCommand.bool.must = {
+                "match": {
+                    "title": query.must
+                }
+            };
         }
+
+        if(query.must_not) {
+            queryCommand.bool.must_not = {
+                "match": {
+                    "title": query.must_not
+                }
+            };
+        }
+
     }
     console.log('Query:', queryCommand);
     
@@ -73,5 +91,5 @@ var composeQuery = function(query){
                 }
             }
         }
-    }
+    };
 }

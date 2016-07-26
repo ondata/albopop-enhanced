@@ -1,3 +1,7 @@
+body > * {
+    margin-bottom: 2em;
+}
+
 #map-container {
   min-height: 300px;
 }
