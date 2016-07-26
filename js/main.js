@@ -41,6 +41,8 @@ $(function(){
     });
     
     // build and draw map
+    var mapSize = $map.width();
+    $map.height(mapSize);
     albopop.map = L.map('map-container').setView([41.9, 12.5], 5);
     $.get('assets/italy-regions.json', {}, drawMap);
     
@@ -158,7 +160,7 @@ $(function(){
             var d = doc['_source'];
             $list.append(
                 '<a href="'+d.link+'" target="_blank" class="list-group-item">' +
-                    '<h4 class="list-group-item-heading">' + d.updated + '</h4>' +
+                    '<h4 class="list-group-item-heading">Da ' + d.source.title + ' il ' + d.updated + '</h4>' +
                     '<p class="list-group-item-text">' + d.title + '</p>' +
                     '<p class="list-group-item-tags">'+d.source.tags.map(function(t) { return '<span class="label label-info">'+t+'</span>'; })+'</p>' + 
                 '</a>' 
@@ -169,7 +171,9 @@ $(function(){
     
     function populateCloud(items) {
         // build word cloud
-        var cloudSize = $wordcloud.width();
+        var cloudSize = $wordcloud.width(),
+            l = function(d) { return d.score || d.doc_count || 1; },
+            s = d3.scale.sqrt().domain(d3.extent(items.map(l))).range([10,36]);
         albopop.cloudLayout = d3.layout.cloud()
             .size([cloudSize, cloudSize])
             .words(items)
@@ -177,10 +181,11 @@ $(function(){
                 return d.key;
             })
             .fontSize(function(d) {
-                return d.score || d.doc_count || 1;
+                return s(l(d));
             })
+            .font("Impact")
             .rotate(0)
-            .padding(5)
+            .padding(2)
             .on('end', drawCloud);
         albopop.cloudLayout.start();    // method 'start' not chainable (returns undefined)
     }
@@ -238,7 +243,8 @@ $(function(){
 
     function drawCloud(words){
         
-        var layout = albopop.cloudLayout;
+        var layout = albopop.cloudLayout,
+            s = d3.scale.category20();
         
         $wordcloud.empty();
         d3.select('#word-cloud-container').append('svg')
@@ -254,14 +260,25 @@ $(function(){
                 return 'translate(' + [d.x, d.y] + ')rotate(' + d.rotate + ')';
             })
             .attr('text-anchor', 'middle')
+            .style('font-family', 'Impact')
             .style('font-size', function(d){
                 return d.size;
             })
             .style('fill', function(d, i){
                 var colorIndex = i % 20;
-                return d3.schemeCategory20[colorIndex];
+                return s(colorIndex);
             })
-            .text(function(d){ return d.text });
+            .text(function(d){ return d.text })
+            .on("mouseover", function(d) {
+                $list.find("a").each(function() {
+                    if ($(this).find(".list-group-item-text").text().toLowerCase().indexOf(d.text.toLowerCase()) > -1) {
+                        $(this).addClass("active");
+                    }
+                });
+            })
+            .on("mouseout", function(d) {
+                $list.find("a").removeClass("active");
+            });
     }
 });
 
