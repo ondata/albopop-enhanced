@@ -1,12 +1,25 @@
-#map-container {
-  min-height: 300px;
+body > * {
+    margin-bottom: 2em;
 }
 
 .leaflet-container {
     background-color:rgba(255,0,0,0.0);
 }
 
-#search-results {
+#list {
     min-height: 250px;
     overflow-y: scroll;
 }
+
+.list-group-item-tags {
+    text-align: right;
+}
+
+.panel-body#list-container {
+    padding: 0;
+}
+
+#rss-container {
+    text-align: right;
+}
+
