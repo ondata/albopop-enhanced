@@ -103,18 +103,20 @@ function updateAll(){
     // draw new markers
     _.each(albopop.data.citiesWordClouds, function(city){
         var cityName = city.key;
-        var cityLat  = albopop.poi[cityName].lat;
-        var cityLon  = albopop.poi[cityName].lon;
+        var cityLat  = _.has(albopop.poi,cityName) ? albopop.poi[cityName].lat : 0;
+        var cityLon  = _.has(albopop.poi,cityName) ? albopop.poi[cityName].lon : 0;
         
-        var marker = L.marker(
-                [cityLat, cityLon],
-                {
-                    title: cityName
-                }
-        ).addTo(albopop.map);
-        marker.bindPopup(cityName);
-        marker.on('click', markerClicked);
-        albopop.markers.push(marker);
+        if (cityLat && cityLon) {
+            var marker = L.marker(
+                    [cityLat, cityLon],
+                    {
+                        title: cityName
+                    }
+            ).addTo(albopop.map);
+            marker.bindPopup(cityName);
+            marker.on('click', markerClicked);
+            albopop.markers.push(marker);
+        }
     });
 }
 
