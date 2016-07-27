@@ -18,16 +18,17 @@ $(function(){
         mqueue = 2,
         activeMarker = null;
     
-    var $form = $("#form-container"),
-        $inputs = $form.find("input, button"),
-        $must = $("#must"),
-        $must_not = $("#must_not"),
-        $submit = $("#submit"),
-        $wordcloud = $("#word-cloud-container"),
-        $map = $("#map-container"),
-        $list = $("#list-container"),
-        $modal = $("#loading-modal"),
-        $rss = $("#rss");
+    var $form             = $("#form-container"),
+        $inputs           = $form.find("input, button"),
+        $must             = $("#must"),
+        $must_not         = $("#must_not"),
+        $submit           = $("#submit"),
+        $wordcloud        = $("#word-cloud-container"),
+        $generalWordCloud = $("#background")
+        $map              = $("#map-container"),
+        $list             = $("#list-container"),
+        $modal            = $("#loading-modal"),
+        $rss              = $("#rss");
 
     $inputs.prop('disabled',true);
     $inputs.on("input",updateRss);
@@ -55,7 +56,7 @@ $(function(){
     
     // build and draw map
     var mapSize = $map.width();
-    $map.height(mapSize);
+    $map.height(mapSize*1.5);
     albopop.map = L.map('map-container').setView([41.9, 12.5], 5);
     $.get('assets/italy-regions.json', {}, drawMap);
     
@@ -128,16 +129,18 @@ $(function(){
         });
         albopop.markers = [];
         
-        // delete cloud
+        // delete clouds
         $wordcloud.empty();
+        $generalWordCloud.empty();
         
         // delete articles
         $list.empty();
     }
 
     function updateAll(){
-
-        populateCloud(albopop.data.generalWordCloud);
+        
+        populateGeneralCloud(albopop.data.generalWordCloud); // general cloud as a background
+        populateCloud(albopop.data.generalWordCloud);        // general cloud is initially run also in the small cloud box
         populateMap(albopop.data.citiesWordClouds);
         populateList(albopop.data.generalListItems);
         
@@ -180,6 +183,28 @@ $(function(){
             );
         });
         
+    }
+    
+    function populateGeneralCloud(items) {
+        
+        // build background word cloud
+        var cloudSize = [ $generalWordCloud.width(), $generalWordCloud.height()];
+            /*l = function(d) { return d.score || d.doc_count || 1; },
+            s = d3.scale.sqrt().domain(d3.extent(items.map(l))).range([10,36]);*/
+        albopop.generalCloudLayout = d3.layout.cloud()
+            .size(cloudSize)
+            .words(items)
+            .text(function(d){
+                return d.key;
+            })
+            .fontSize(function(d) {
+                return 50;//s(l(d));
+            })
+            .font("Impact")
+            .rotate(0)
+            .padding(2)
+            .on('end', drawGeneralCloud);
+        albopop.generalCloudLayout.start();    // method 'start' not chainable (returns undefined)
     }
     
     function populateCloud(items) {
@@ -295,6 +320,32 @@ $(function(){
             .on("mouseout", function(d) {
                 $list.find("a").removeClass("active");
             });
+    }
+
+    function drawGeneralCloud(words){
+        
+        var layout = albopop.generalCloudLayout;
+        
+        $generalWordCloud.empty();
+        d3.select('#background').append('svg')
+            .attr('width', layout.size()[0])
+            .attr('height', layout.size()[1])
+            .append('g')
+            .attr('transform', 'translate(' + layout.size()[0]/2 + ',' + layout.size()[1]/2 + ')')
+            .selectAll('text')
+            .data(words)
+            .enter()
+            .append('text')
+            .attr('transform', function(d){
+                return 'translate(' + [d.x, d.y] + ')rotate(' + d.rotate + ')';
+            })
+            .attr('text-anchor', 'middle')
+            .style('font-family', 'Impact')
+            .style('font-size', function(d){
+                return d.size;
+            })
+            .style('fill', '#666')
+            .text(function(d){ return d.text })
     }
 });
 
