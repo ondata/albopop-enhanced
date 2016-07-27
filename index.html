@@ -23,82 +23,101 @@
         <script src="js/main.js"></script>
     </head>
 
-    <body class="container">
+    <body>
 
-        <header id="header">
-            <h1>AlboPOP Enhanced by Dataninja</h1>
-            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
-            <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
-        </header>
+        <div class="container">
 
-        <section id="form" class="row">
-            <form id="form-container" class="col-xs-10 form-inline">
-                <div class="form-group"><label for="must">Cerca atti con</label> <input id="must" type="text" class="form-control" placeholder="tutto" value=""/>,</div>
-                <div class="form-group"><label for="must_not">ma senza</label> <input id="must_not" type="text" class="form-control" placeholder="niente" value="matrimonio"/>.</div>
-                <button id="submit" class="btn btn-default" type="submit">Cerca!</button>
-            </form>
-            <div id="rss-container" class="col-xs-2">
-                <a id="rss" href="#" target="_blank"><i class="fa fa-2x fa-rss-square" aria-hidden="true"></i></a>
+            <header id="header">
+                <h1>AlboPOP Enhanced by Dataninja</h1>
+            </header>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <section id="info">
+                        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+                        <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
+                    </section>
+
+                    <section id="form" class="row">
+                        <form id="form-container" class="col-xs-10 form-inline">
+                            <div class="form-group"><label for="must">Cerca atti con</label> <input id="must" type="text" class="form-control" placeholder="tutto" value=""/>,</div>
+                            <div class="form-group"><label for="must_not">ma senza</label> <input id="must_not" type="text" class="form-control" placeholder="niente" value="matrimonio"/>.</div>
+                            <button id="submit" class="btn btn-default" type="submit">Cerca!</button>
+                        </form>
+                        <div id="rss-container" class="col-xs-2">
+                            <a id="rss" href="#" target="_blank"><i class="fa fa-2x fa-rss-square" aria-hidden="true"></i></a>
+                        </div>
+                    </section>
+
+                </div>
             </div>
-        </section>
-
-        <section id="main" class="row">
-            <div id="left-column" class="col-xs-12 col-md-4">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">Word cloud</h3></div>
-                            <div id="word-cloud-container" class="panel-body"></div>
+            <section id="main" class="row">
+                <div id="left-column" class="col-xs-12 col-md-4">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><h3 class="panel-title">Word cloud</h3></div>
+                                <div id="word-cloud-container" class="panel-body"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><h3 class="panel-title">Mappa degli albi</h3></div>
+                                <div id="map-container" class="panel-body"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <footer id="footer">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">Credits</h3></div>
+                                    <div id="credits-container" class="panel-body list-group">
+                                        <p>CC BY 4.0 by <a href="http://www.dataninja.it/" target="_blank">Dataninja</a>.</p>
+                                        <p>Applicazione basata sulle librerie 
+                                            <a href="https://github.com/jquery/jquery" target="_blank">jquery</a>,
+                                            <a href="https://github.com/twbs/bootstrap" target="_blank">bootstrap</a>,
+                                            <a href="https://github.com/d3/d3" target="_blank">d3js</a> + <a href="https://github.com/jasondavies/d3-cloud" target="_blank">d3cloud</a>,
+                                            elasticsearch (<a href="https://github.com/elastic/elasticsearch-js" target="_blank">js</a> e <a href="https://github.com/elastic/elasticsearch-php" target="_blank">php</a>),
+                                            <a href="https://github.com/Leaflet/Leaflet" target="_blank">leaflet</a>,
+                                            <a href="https://github.com/suin/php-rss-writer" target="_blank">php-rss-writer</a>.
+                                        </p>
+                                        <p>Codice su Github: <a href="https://github.com/dataninja/AlboPOP-enhanced/" target="_blank">dataninja/AlboPOP-enhanced</a>.</p>
+                                        <p>La licenza del contenuto degli atti è specificata alla fonte.</p>
+                                    </div>
+                                </div>
+                            </footer>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">Mappa degli albi</h3></div>
-                            <div id="map-container" class="panel-body"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <footer id="footer">
-                            <p>CC BY 4.0 by <a href="http://www.dataninja.it/" target="_blank">Dataninja</a>.</p>
-                            <p>Applicazione basata sulle librerie 
-                                <a href="https://github.com/jquery/jquery" target="_blank">jquery</a>,
-                                <a href="https://github.com/twbs/bootstrap" target="_blank">bootstrap</a>,
-                                <a href="https://github.com/d3/d3" target="_blank">d3js</a> + <a href="https://github.com/jasondavies/d3-cloud" target="_blank">d3cloud</a>,
-                                elasticsearch (<a href="https://github.com/elastic/elasticsearch-js" target="_blank">js</a> e <a href="https://github.com/elastic/elasticsearch-php" target="_blank">php</a>),
-                                <a href="https://github.com/Leaflet/Leaflet" target="_blank">leaflet</a>,
-                                <a href="https://github.com/suin/php-rss-writer" target="_blank">php-rss-writer</a>.
-                            </p>
-                            <p>Codice su Github: <a href="https://github.com/dataninja/AlboPOP-enhanced/" target="_blank">dataninja/AlboPOP-enhanced</a>.</p>
-                            <p>La licenza del contenuto degli atti è specificata alla fonte.</p>
-                        </footer>
-                    </div>
-                </div>
-            </div>
-            <div id="right-column" class="col-xm-12 col-md-8">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">Lista dei documenti</h3></div>
-                            <div id="list-container" class="panel-body list-group">
+                <div id="right-column" class="col-xm-12 col-md-8">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><h3 class="panel-title">Lista dei documenti</h3></div>
+                                <div id="list-container" class="panel-body list-group">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <div id="loading-modal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div>Ricerca in corso ...</div>
-                    <i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>
+            <div id="loading-modal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div>Ricerca in corso ...</div>
+                        <i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>
+                    </div>
                 </div>
             </div>
+
         </div>
+
+        <div id="background"></div>
 
     </body>
 </html>
