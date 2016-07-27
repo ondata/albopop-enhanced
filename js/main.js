@@ -42,6 +42,13 @@ $(function(){
     function buildRss(s,w,l) {
         return "feed/?search="+(s||"")+"&without="+(w||"")+"&location="+(l||"");
     }
+
+    function track() {
+        var s = $must.val(),
+            w = $must_not.val(),
+            l = activeMarker;
+        $.get("tracker/", { search: s, without: w, location: l });
+    }
     
     // connect to elasticsearch
     albopop.elastic = new elasticsearch.Client({
@@ -117,7 +124,9 @@ $(function(){
             
             // update UI
             updateAll();
-        });        
+        });
+
+        track();
     });
 
     function cleanAll(){
@@ -231,6 +240,7 @@ $(function(){
         }
 
         updateRss();
+        track();
         
     }
 
