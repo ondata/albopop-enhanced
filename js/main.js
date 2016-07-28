@@ -197,17 +197,25 @@ $(function(){
     function populateList(items) {
         // populate articles list
         $list.empty();
-        _.each(items, function(doc){
-            //console.log(doc);
-            var d = doc['_source'];
+        if (items && items.length) {
+            _.each(items, function(doc){
+                //console.log(doc);
+                var d = doc['_source'];
+                $list.append(
+                    '<a href="'+d.link+'" target="_blank" class="list-group-item">' +
+                        '<h4 class="list-group-item-heading">Da ' + d.source.title + ' il ' + d['@timestamp'] + '</h4>' +
+                        '<p class="list-group-item-text">' + d.title + '</p>' +
+                        '<p class="list-group-item-tags">'+d.source.tags.map(function(t) { return '<span class="label label-info">'+t+'</span>'; })+'</p>' + 
+                    '</a>' 
+                );
+            });
+        } else {
             $list.append(
-                '<a href="'+d.link+'" target="_blank" class="list-group-item">' +
-                    '<h4 class="list-group-item-heading">Da ' + d.source.title + ' il ' + d['@timestamp'] + '</h4>' +
-                    '<p class="list-group-item-text">' + d.title + '</p>' +
-                    '<p class="list-group-item-tags">'+d.source.tags.map(function(t) { return '<span class="label label-info">'+t+'</span>'; })+'</p>' + 
+                '<a href="#" class="list-group-item">' +
+                    '<p class="list-group-item-text">Nessun documento trovato...</p>' +
                 '</a>' 
             );
-        });
+        }
         
     }
     
@@ -261,24 +269,29 @@ $(function(){
     }
     
     function populateCloud(items) {
-        // build word cloud
-        var cloudSize = $wordcloud.width(),
-            l = function(d) { return d.score || d.doc_count || 1; },
-            s = d3.scale.sqrt().domain(d3.extent(items.map(l))).range([10,36]);
-        albopop.cloudLayout = d3.layout.cloud()
-            .size([cloudSize, cloudSize])
-            .words(items)
-            .text(function(d){
-                return d.key;
-            })
-            .fontSize(function(d) {
-                return s(l(d));
-            })
-            .font("Impact")
-            .rotate(0)
-            .padding(2)
-            .on('end', drawCloud);
-        albopop.cloudLayout.start();    // method 'start' not chainable (returns undefined)
+
+        if (items && items.length) {
+            // build word cloud
+            var cloudSize = $wordcloud.width(),
+                l = function(d) { return d.score || d.doc_count || 1; },
+                s = d3.scale.sqrt().domain(d3.extent(items.map(l))).range([10,36]);
+            albopop.cloudLayout = d3.layout.cloud()
+                .size([cloudSize, cloudSize])
+                .words(items)
+                .text(function(d){
+                    return d.key;
+                })
+                .fontSize(function(d) {
+                    return s(l(d));
+                })
+                .font("Impact")
+                .rotate(0)
+                .padding(2)
+                .on('end', drawCloud);
+            albopop.cloudLayout.start();    // method 'start' not chainable (returns undefined)
+        } else {
+            $wordcloud.text("Nessuna parola trovata...");
+        }
     }
 
     function markerClicked(event){
