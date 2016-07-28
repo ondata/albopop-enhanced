@@ -22,6 +22,7 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^3.3.6",
+    "bootstrap-switch": "^3.3.2",
     "d3": "^3.5.17",
     "d3-cloud": "git+https://github.com/jenkin/d3-cloud.git#feature/multi-center-wc",
     "font-awesome": "^4.6.3",

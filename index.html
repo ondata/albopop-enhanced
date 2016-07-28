@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="node_modules/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css">
         <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" href="node_modules/leaflet/dist/leaflet.css">
         <link rel="stylesheet" href="css/main.css">
@@ -17,6 +18,7 @@
         <script src="node_modules/d3-cloud/build/d3.layout.cloud.js"></script>
         <script src="node_modules/jquery/dist/jquery.min.js"></script>
         <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="node_modules/bootstrap-switch/dist/js/bootstrap-switch.min.js"></script>
         <script src="node_modules/leaflet/dist/leaflet.js"></script>
         <!--<script src="node_modules/elasticsearch/src/elasticsearch.jquery.js"></script>-->
         <script src="js/elasticsearch.js"></script>
@@ -26,11 +28,16 @@
 
     <body>
 
-        <div class="container">
+        <header id="header">
+            <nav class="navbar navbar-default navbar-fixed-top">
+                <div class="container">
+                    <a class="navbar-brand" href="#">AlboPOP Enhanced by Dataninja</a>
+                    <p class="navbar-text navbar-right"><input type="checkbox" name="toggle-map" data-size="mini" data-label-text="View&nbsp;map"></p>
+                </div>
+            </nav>
+        </header>
 
-            <header id="header">
-                <h1>AlboPOP Enhanced by Dataninja</h1>
-            </header>
+        <div id="main-container" class="container">
 
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -53,6 +60,7 @@
 
                 </div>
             </div>
+
             <section id="main" class="row">
                 <div id="left-column" class="col-xs-12 col-md-4">
                     <div class="row">

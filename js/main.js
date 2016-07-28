@@ -17,9 +17,13 @@ $(function(){
     var queue = 0,
         mqueue = 2,
         mwords = 5,
+        hnav = $("#header nav").height(),
         activeMarker = null;
+
+    $("body").css({"padding-top":hnav});
     
-    var $form             = $("#form-container"),
+    var $container        = $("#main-container"),
+        $form             = $("#form-container"),
         $inputs           = $form.find("input, button"),
         $must             = $("#must"),
         $must_not         = $("#must_not"),
@@ -29,10 +33,17 @@ $(function(){
         $map              = $("#map-container"),
         $list             = $("#list-container"),
         $modal            = $("#loading-modal"),
+        $switch           = $("[name='toggle-map']"),
         $rss              = $("#rss");
 
     $inputs.prop('disabled',true);
     $inputs.on("input",updateRss);
+    
+    $switch.bootstrapSwitch();
+    $switch.on('switchChange.bootstrapSwitch', function(event, state) {
+        $container.toggle(!state);
+    });
+
 
     function updateRss() {
         var s = $must.val(),
@@ -199,7 +210,7 @@ $(function(){
 
         var items = [],
             width = $generalWordCloud.width(),
-            height = $generalWordCloud.height(),
+            height = $generalWordCloud.height()-hnav,
             projection = d3.geo.albers()
                 .center([0,40])
                 .rotate([347,0])
@@ -369,7 +380,7 @@ $(function(){
             .attr('width', layout.size()[0])
             .attr('height', layout.size()[1])
             .append('g')
-            .attr('transform', 'translate(' + layout.size()[0]/2 + ',' + layout.size()[1]/2 + ')')
+            .attr('transform', 'translate(' + layout.size()[0]/2 + ',' + (layout.size()[1]/2+hnav) + ')')
             .selectAll('text')
             .data(words)
             .enter()
