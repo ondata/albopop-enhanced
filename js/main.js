@@ -104,19 +104,23 @@ $(function(){
         
         // extract query
         var query = {
-            "must": $must.val(),
-            "must_not": $must_not.val()
-        };
+               "must": $must.val(),
+                "must_not": $must_not.val()
+            },
+            today = new Date(),
+            indices = getDates(addDays(today, -14), today)
+                .map(function(dt) { return "albopop-v3-"+dt.toISOString().slice(0,10).replace(/-/g,"."); })
+                .join(",");
         
         // loading...
         $modal.modal({
             backdrop: 'static',
             keyboard: false
         });
-        
+
         // ask elasticsearch
         albopop.elastic.search({
-            index: "albopop-v3-*",
+            index: indices,
             type: "rss_item",
             body: composeQuery(query)
         }, function(error, response){
@@ -399,3 +403,23 @@ $(function(){
     }
 });
 
+var getDates = function(startDate, endDate) {
+  var dates = [],
+      currentDate = startDate,
+      addDays = function(days) {
+        var date = new Date(this.valueOf());
+        date.setDate(date.getDate() + days);
+        return date;
+      };
+  while (currentDate <= endDate) {
+    dates.push(currentDate);
+    currentDate = addDays.call(currentDate, 1);
+  }
+  return dates;
+};
+
+var addDays = function(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+};
