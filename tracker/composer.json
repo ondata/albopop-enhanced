@@ -1,0 +1,7 @@
+{
+	"name": "h24/ag5-feed-generator",
+	"require": {
+		"elasticsearch/elasticsearch": "~1.4.1",
+		"php-console/php-console": "^3.1"
+	}
+}
