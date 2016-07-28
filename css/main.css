@@ -1,6 +1,11 @@
 .panel {
     margin-top: 1em;
     margin-bottom: 1em;
+    background-color: rgba(255,255,255,0.9);
+}
+
+.panel-default > .panel-heading {
+    background-color: rgba(245,245,245,0.9);
 }
 
 #loading-modal {
@@ -14,6 +19,10 @@
 #list {
     min-height: 250px;
     overflow-y: scroll;
+}
+
+.list-group-item {
+    background-color: transparent;
 }
 
 .list-group-item-tags {

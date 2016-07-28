@@ -16,6 +16,7 @@ $(function(){
 
     var queue = 0,
         mqueue = 2,
+        mwords = 5,
         activeMarker = null;
     
     var $form             = $("#form-container"),
@@ -148,7 +149,7 @@ $(function(){
 
     function updateAll(){
         
-        populateGeneralCloud(albopop.data.generalWordCloud); // general cloud as a background
+        populateGeneralCloud(albopop.data.citiesWordClouds); // general cloud as a background
         populateCloud(albopop.data.generalWordCloud);        // general cloud is initially run also in the small cloud box
         populateMap(albopop.data.citiesWordClouds);
         populateList(albopop.data.generalListItems);
@@ -194,25 +195,52 @@ $(function(){
         
     }
     
-    function populateGeneralCloud(items) {
+    function populateGeneralCloud(buckets) {
+
+        var items = [],
+            width = $generalWordCloud.width(),
+            height = $generalWordCloud.height(),
+            projection = d3.geo.albers()
+                .center([0,40])
+                .rotate([347,0])
+                .parallels([35,45])
+                .translate([width / 2, height / 2])
+                .scale(6000);
+
+        buckets.forEach(function(l,i) {
+            if (_.has(albopop.poi,l.key)) {
+                l.words.buckets.forEach(function(w,i) {
+                    if (i < mwords) {
+                        items.push({
+                            "text": w.key,
+                            "value": w.score,
+                            "cluster": l.key,
+                            "center": projection([+albopop.poi[l.key].lon,+albopop.poi[l.key].lat])
+                        });
+                    }
+                });
+            }
+        });
         
         // build background word cloud
-        var cloudSize = [ $generalWordCloud.width(), $generalWordCloud.height()];
-            /*l = function(d) { return d.score || d.doc_count || 1; },
-            s = d3.scale.sqrt().domain(d3.extent(items.map(l))).range([10,36]);*/
+        var l = function(d) { return d.value || 1; },
+            s = d3.scale.sqrt().domain(d3.extent(items.map(l))).range([10,42]);
+
         albopop.generalCloudLayout = d3.layout.cloud()
-            .size(cloudSize)
+            .size([width,height])
             .words(items)
             .text(function(d){
-                return d.key;
+                return d.text;
             })
             .fontSize(function(d) {
-                return 50;//s(l(d));
+                return s(l(d));
             })
             .font("Impact")
-            .rotate(0)
+            .rotate(function() { return ~~(Math.random() * 2) * 0; })
             .padding(2)
+            .square(true)
             .on('end', drawGeneralCloud);
+
         albopop.generalCloudLayout.start();    // method 'start' not chainable (returns undefined)
     }
     
@@ -352,10 +380,10 @@ $(function(){
             .attr('text-anchor', 'middle')
             .style('font-family', 'Impact')
             .style('font-size', function(d){
-                return d.size;
+                return d.size + 'px';
             })
             .style('fill', '#666')
-            .text(function(d){ return d.text })
+            .text(function(d){ return d.text });
     }
 });
 
