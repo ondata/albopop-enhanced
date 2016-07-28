@@ -100,6 +100,7 @@ $(function(){
         
         // clean up UI
         cleanAll();
+        updateRss();
         
         // extract query
         var query = {
