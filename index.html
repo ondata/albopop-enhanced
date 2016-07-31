@@ -45,14 +45,14 @@
 
                     <section id="info">
                         <p>Questo è un motore di ricerca degli albi pretori italiani. Bandi, appalti, contratti, consulenze, opportunità di lavoro per singoli professionisti
-                        e per le imprese, vengono pubblicati ogni minuti nelle migliaia di albi pretori italiani. Con questa applicazione potrai <strong>trovare in un unico
+                        e per le imprese, vengono pubblicati ogni minuto dalle migliaia di albi pretori delle pubbliche amministrazioni. Con questa applicazione potrai <strong>trovare in un unico
                         luogo</strong> gli atti che ti interessano e <strong>ricevere aggiornamenti</strong> tutte le volte che vengono pubblicati nuovi atti sugli argomenti
                         che ti interessano. Provare per credere! :-)</p>
                         <h4>Cosa puoi fare e come filtrare i dati</h4>
                         <p>Puoi effettuare ricerche all'interno degli <a href="http://albopop.it/comune/">
                           albi pretori presenti in questa lista</a>, i cui contenuti vengono aggregati e indicizzati tramite feed rss.
                           <ul>
-                            <li><strong>Cerca parole specifiche</strong>: come ad esempio "consulenza", "por fesr", "incarico", "opendata". I risultati
+                            <li><strong>Cercare parole specifiche</strong>: come ad esempio "consulenza", "por fesr", "incarico". I risultati
                             <mark>includeranno</mark> solo documenti indicizzati al cui interno sono presenti questi termini.
                             </li>
                             <li><strong>Escludere parole specifiche</strong>: come ad esempio "matrimonio", "provvedimento". I risultati <mark>escluderanno</mark>
@@ -63,25 +63,27 @@
                             </li>
                             <li><strong>Ricevere aggiornamenti su una ricerca</strong>: una volta effettuata una ricerca, l'applicazione procude un feed rss
                             relativo alla sola ricerca effettuata (ad esempio, se cerchi <em>fesr</em> senza <em>matrimonio</em>, otterrai questo feed: <code>
-                            http://localhost:8000/feed/?search=fesr&without=matrimonio&location=</code>). Come? Ad esempio creando un tuo bot telegram nel quale
-                            inserire il feed per ricevere notifiche sul tuo cellulare. Oppure attivando una ricetta su <a href="https://ifttt.com/" target="_blank">IFTTT</a>
-                            per ricevere aggiornamenti via mail, tutte le volte che una delle amministrazioni pubblica un atto su un argomento per te rilevante.
+                            http://dev.dataninja.it/AlboPOP-enhanced/feed/?search=fesr&without=matrimonio</code>).
+                            Per ricevere aggiornamento puoi ad esempio creare un tuo bot telegram nel quale inserire il feed per ricevere notifiche sul tuo cellulare.
+                            Oppure attivare una ricetta su <a href="https://ifttt.com/" target="_blank">IFTTT</a> per ricevere aggiornamenti via mail,
+                            tutte le volte che una delle amministrazioni pubblica un atto su un argomento per te rilevante.
                             </li>
                           </ul>
                         </p>
                     </section>
-
+                    <hr>
                     <section id="form-container">
                         <form id="form" class="row form-inline">
-                            <div class="col-xs-6">
-                                <div class="form-group"><label for="must">Cerca atti con</label> <input id="must" type="text" class="form-control" placeholder="qualsiasi parola" value=""/>, </div>
-                                <div class="form-group"><label for="must_not">ma senza</label> <input id="must_not" type="text" class="form-control" placeholder="escludere nulla" value="matrimonio"/>.</div>
+                            <div class="col-xs-4">
+                                <div class="form-group"><label for="must">Cerca atti con</label> <input id="must" type="text" class="form-control" placeholder="qualsiasi parola..." value=""/></div>
+                                <div class="form-group"><label for="must_not">Parole da escludere</label> <input id="must_not" type="text" class="form-control" placeholder="non escludere nulla..." value=""/></div>
                             </div>
-                            <div class="col-xs-5">
-                                <button id="submit" class="btn btn-primary" type="submit">Vai!</button>
+                            <div class="col-xs-3">
+                                <button id="submit" class="btn btn-primary" type="submit">Avvia la ricerca!</button>
                             </div>
-                            <div id="rss-container" class="col-xs-1">
-                                <a id="rss" href="#" target="_blank"><i class="fa fa-2x fa-rss-square" aria-hidden="true"></i></a>
+                            <div class="col-xs-5" id="rss-container">
+                              <a id="rss" href="#" target="_blank"><i class="fa fa-2x fa-rss-square" aria-hidden="true"></i></a>
+                              Questo è il feed rss della tua ricerca. Copialo e inseriscilo su un bot telegram o su una ricetta IFTTT per ricevere le notifiche.
                             </div>
                         </form>
                     </section>
@@ -113,16 +115,11 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading"><h3 class="panel-title">Credits</h3></div>
                                     <div id="credits-container" class="panel-body list-group">
-<<<<<<< HEAD
-                                        <p>CC BY 4.0 by <a href="http://www.dataninja.it/" target="_blank">Dataninja</a>.</p>
-                                        <p>Applicazione basata sulle librerie
-=======
                                         <p>
                                             CC BY 4.0 by <a href="http://www.dataninja.it/" target="_blank">Dataninja</a>,
                                             powered by <a href="http://albopop.it/" target="_target">AlboPOP</a>.
                                         </p>
-                                        <p>Applicazione basata sulle librerie 
->>>>>>> feature/cloud-background
+                                        <p>Applicazione basata sulle librerie:
                                             <a href="https://github.com/jquery/jquery" target="_blank">jquery</a>,
                                             <a href="https://github.com/jashkenas/underscore" target="_blank">underscore</a>,
                                             <a href="https://github.com/twbs/bootstrap" target="_blank">bootstrap</a>,
@@ -134,6 +131,7 @@
                                         <p>Codice su Github (licenza MIT): <a href="https://github.com/dataninja/AlboPOP-enhanced/" target="_blank">dataninja/AlboPOP-enhanced</a>.</p>
                                         <p>La licenza del contenuto degli atti è specificata alla fonte.</p>
                                         <p>Comuni monitorati: <span id="elenco-comuni"></span>.</p>
+                                        <hr>
                                         <p>Questa applicazione traccia in maniera anonima alcune informazioni del client dell'utente per soli fini statistici: chiavi di ricerca, marker seleionato, ip e stringa user agent. Nessuna di queste informazioni viene ceduta a terzi.</p>
                                     </div>
                                 </div>
@@ -157,8 +155,8 @@
             <div id="loading-modal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
-                        <h2>Ricerca in corso ...</h2>
-                        <p><i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i></p>
+                        <h3>Ricerca in corso ...</h3>
+                        <p><i class="fa fa-refresh fa-spin fa-2x fa-fw"></i></p>
                     </div>
                 </div>
             </div>
