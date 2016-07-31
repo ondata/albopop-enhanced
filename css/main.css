@@ -7,6 +7,10 @@ body {
     margin-right: 0;
 }
 
+#submit {
+    width: 100%;
+}
+
 .panel {
     margin-top: 1em;
     margin-bottom: 1em;
@@ -56,6 +60,7 @@ body {
     background: url("../assets/texture.jpg");
 }
 
+<<<<<<< HEAD
 /* antitrash CSS */
 
 div#background {
@@ -64,4 +69,8 @@ div#background {
 
 body {
   background: #E7E7E7;
+=======
+#credits-container {
+    font-size: smaller;
+>>>>>>> feature/cloud-background
 }

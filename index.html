@@ -71,15 +71,19 @@
                         </p>
                     </section>
 
-                    <section id="form" class="row">
-                        <form id="form-container" class="col-xs-10 form-inline">
-                            <div class="form-group"><label for="must">Cerca atti con</label> <input id="must" type="text" class="form-control" placeholder="tutto" value=""/>,</div>
-                            <div class="form-group"><label for="must_not">ma senza</label> <input id="must_not" type="text" class="form-control" placeholder="niente" value="matrimonio"/>.</div>
-                            <button id="submit" class="btn btn-default" type="submit">Cerca!</button>
+                    <section id="form-container">
+                        <form id="form" class="row form-inline">
+                            <div class="col-xs-6">
+                                <div class="form-group"><label for="must">Cerca atti con</label> <input id="must" type="text" class="form-control" placeholder="qualsiasi parola" value=""/>, </div>
+                                <div class="form-group"><label for="must_not">ma senza</label> <input id="must_not" type="text" class="form-control" placeholder="escludere nulla" value="matrimonio"/>.</div>
+                            </div>
+                            <div class="col-xs-5">
+                                <button id="submit" class="btn btn-primary" type="submit">Vai!</button>
+                            </div>
+                            <div id="rss-container" class="col-xs-1">
+                                <a id="rss" href="#" target="_blank"><i class="fa fa-2x fa-rss-square" aria-hidden="true"></i></a>
+                            </div>
                         </form>
-                        <div id="rss-container" class="col-xs-2">
-                            <a id="rss" href="#" target="_blank"><i class="fa fa-2x fa-rss-square" aria-hidden="true"></i></a>
-                        </div>
                     </section>
 
                 </div>
@@ -109,8 +113,16 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading"><h3 class="panel-title">Credits</h3></div>
                                     <div id="credits-container" class="panel-body list-group">
+<<<<<<< HEAD
                                         <p>CC BY 4.0 by <a href="http://www.dataninja.it/" target="_blank">Dataninja</a>.</p>
                                         <p>Applicazione basata sulle librerie
+=======
+                                        <p>
+                                            CC BY 4.0 by <a href="http://www.dataninja.it/" target="_blank">Dataninja</a>,
+                                            powered by <a href="http://albopop.it/" target="_target">AlboPOP</a>.
+                                        </p>
+                                        <p>Applicazione basata sulle librerie 
+>>>>>>> feature/cloud-background
                                             <a href="https://github.com/jquery/jquery" target="_blank">jquery</a>,
                                             <a href="https://github.com/jashkenas/underscore" target="_blank">underscore</a>,
                                             <a href="https://github.com/twbs/bootstrap" target="_blank">bootstrap</a>,
@@ -119,8 +131,9 @@
                                             <a href="https://github.com/Leaflet/Leaflet" target="_blank">leaflet</a>,
                                             <a href="https://github.com/suin/php-rss-writer" target="_blank">php-rss-writer</a>.
                                         </p>
-                                        <p>Codice su Github: <a href="https://github.com/dataninja/AlboPOP-enhanced/" target="_blank">dataninja/AlboPOP-enhanced</a>.</p>
+                                        <p>Codice su Github (licenza MIT): <a href="https://github.com/dataninja/AlboPOP-enhanced/" target="_blank">dataninja/AlboPOP-enhanced</a>.</p>
                                         <p>La licenza del contenuto degli atti è specificata alla fonte.</p>
+                                        <p>Comuni monitorati: <span id="elenco-comuni"></span>.</p>
                                         <p>Questa applicazione traccia in maniera anonima alcune informazioni del client dell'utente per soli fini statistici: chiavi di ricerca, marker seleionato, ip e stringa user agent. Nessuna di queste informazioni viene ceduta a terzi.</p>
                                     </div>
                                 </div>

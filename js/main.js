@@ -23,7 +23,7 @@ $(function(){
     $("body").css({"padding-top":hnav});
     
     var $container        = $("#main-container"),
-        $form             = $("#form-container"),
+        $form             = $("#form"),
         $inputs           = $form.find("input, button"),
         $must             = $("#must"),
         $must_not         = $("#must_not"),
@@ -138,6 +138,10 @@ $(function(){
                 generalListItems: response.hits.hits,
                 generalWordCloud: response.aggregations.words.buckets,
                 citiesWordClouds: response.aggregations.locations.buckets
+            };
+
+            if (!$("#elenco-comuni").text()) {
+                $("#elenco-comuni").text(response.aggregations.locations.buckets.map(function(l) { return l.key; }).join(", "));
             };
             
             // update UI
