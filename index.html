@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -43,8 +44,31 @@
                 <div class="panel-body">
 
                     <section id="info">
-                        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
-                        <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
+                        <p>Questo è un motore di ricerca degli albi pretori italiani. Bandi, appalti, contratti, consulenze, opportunità di lavoro per singoli professionisti
+                        e per le imprese, vengono pubblicati ogni minuti nelle migliaia di albi pretori italiani. Con questa applicazione potrai <strong>trovare in un unico
+                        luogo</strong> gli atti che ti interessano e <strong>ricevere aggiornamenti</strong> tutte le volte che vengono pubblicati nuovi atti sugli argomenti
+                        che ti interessano. Provare per credere! :-)</p>
+                        <h4>Cosa puoi fare e come filtrare i dati</h4>
+                        <p>Puoi effettuare ricerche all'interno degli <a href="http://albopop.it/comune/">
+                          albi pretori presenti in questa lista</a>, i cui contenuti vengono aggregati e indicizzati tramite feed rss.
+                          <ul>
+                            <li><strong>Cerca parole specifiche</strong>: come ad esempio "consulenza", "por fesr", "incarico", "opendata". I risultati
+                            <mark>includeranno</mark> solo documenti indicizzati al cui interno sono presenti questi termini.
+                            </li>
+                            <li><strong>Escludere parole specifiche</strong>: come ad esempio "matrimonio", "provvedimento". I risultati <mark>escluderanno</mark>
+                            i documenti indicizzati al cui interno sono presenti questi termini.
+                            </li>
+                            <li><strong>Filtrare per luogo</strong>: sulla mappa sono presenti dei marker in corrispondenza dei luoghi di pubbliche amministrazioni
+                            dotate di un albo con feed rss. Cliccando su uno di essi visualizzerai i dati della sola pubblica amministrazione selezionata.
+                            </li>
+                            <li><strong>Ricevere aggiornamenti su una ricerca</strong>: una volta effettuata una ricerca, l'applicazione procude un feed rss
+                            relativo alla sola ricerca effettuata (ad esempio, se cerchi <em>fesr</em> senza <em>matrimonio</em>, otterrai questo feed: <code>
+                            http://localhost:8000/feed/?search=fesr&without=matrimonio&location=</code>). Come? Ad esempio creando un tuo bot telegram nel quale
+                            inserire il feed per ricevere notifiche sul tuo cellulare. Oppure attivando una ricetta su <a href="https://ifttt.com/" target="_blank">IFTTT</a>
+                            per ricevere aggiornamenti via mail, tutte le volte che una delle amministrazioni pubblica un atto su un argomento per te rilevante.
+                            </li>
+                          </ul>
+                        </p>
                     </section>
 
                     <section id="form-container">
@@ -89,11 +113,16 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading"><h3 class="panel-title">Credits</h3></div>
                                     <div id="credits-container" class="panel-body list-group">
+<<<<<<< HEAD
+                                        <p>CC BY 4.0 by <a href="http://www.dataninja.it/" target="_blank">Dataninja</a>.</p>
+                                        <p>Applicazione basata sulle librerie
+=======
                                         <p>
                                             CC BY 4.0 by <a href="http://www.dataninja.it/" target="_blank">Dataninja</a>,
                                             powered by <a href="http://albopop.it/" target="_target">AlboPOP</a>.
                                         </p>
                                         <p>Applicazione basata sulle librerie 
+>>>>>>> feature/cloud-background
                                             <a href="https://github.com/jquery/jquery" target="_blank">jquery</a>,
                                             <a href="https://github.com/jashkenas/underscore" target="_blank">underscore</a>,
                                             <a href="https://github.com/twbs/bootstrap" target="_blank">bootstrap</a>,

@@ -60,6 +60,17 @@ body {
     background: url("../assets/texture.jpg");
 }
 
+<<<<<<< HEAD
+/* antitrash CSS */
+
+div#background {
+  display: none;
+}
+
+body {
+  background: #E7E7E7;
+=======
 #credits-container {
     font-size: smaller;
+>>>>>>> feature/cloud-background
 }
