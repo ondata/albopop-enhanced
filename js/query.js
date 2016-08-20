@@ -1,15 +1,33 @@
 var composeQuery = function(query){
     
-    if(!query){
+    if(!query || (!query.must && !query.must_not)){
+
         queryCommand = {
             "match_all": {}
-        }
+        };
+
     } else {
+
         queryCommand = {
-            "match": {
-                "title": query
-            }
+            "bool": {}
+        };
+
+        if(query.must) {
+            queryCommand.bool.must = {
+                "match": {
+                    "title": query.must
+                }
+            };
         }
+
+        if(query.must_not) {
+            queryCommand.bool.must_not = {
+                "match": {
+                    "title": query.must_not
+                }
+            };
+        }
+
     }
     console.log('Query:', queryCommand);
     
@@ -41,7 +59,7 @@ var composeQuery = function(query){
                             "field": "title",
                             "min_doc_count": 1,
                             "size": 25
-                        },
+                        }/*,
                         "aggs": {
                             "hits": {
                                 "top_hits": {
@@ -56,7 +74,7 @@ var composeQuery = function(query){
                                     ]
                                 }
                             }
-                        }
+                        }*/
                     },
                     "hits": {
                         "top_hits": {
@@ -71,7 +89,20 @@ var composeQuery = function(query){
                         }
                     }
                 }
-            }
+            }/*,
+            "hits": {
+                "top_hits": {
+                    "size": 25,
+                    "fields": [],
+                    "sort": [
+                        {
+                            "@timestamp": {
+                                "order": "desc"
+                            }
+                        }
+                    ]
+                }
+            }*/
         }
-    }
+    };
 }

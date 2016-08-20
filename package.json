@@ -1,7 +1,7 @@
 {
   "name": "albopop-enhanced",
-  "version": "0.0.1",
-  "description": "AlboPOP remix",
+  "version": "1.0.0",
+  "description": "AlboPOP Enhanced",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,8 +22,9 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^3.3.6",
-    "d3": "^4.1.1",
-    "d3-cloud": "^1.2.1",
+    "bootstrap-switch": "^3.3.2",
+    "d3": "^3.5.17",
+    "d3-cloud": "git+https://github.com/jenkin/d3-cloud.git#feature/multi-center-wc",
     "font-awesome": "^4.6.3",
     "jquery": "^2.2.4",
     "leaflet": "^0.7.7",

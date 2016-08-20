@@ -1,1 +1,1 @@
-running version http://dev.dataninja.it/AlboPOP-enhanced/
+# AlboPOP Enhanced v1.0.0Running version http://dev.dataninja.it/AlboPOP-enhanced/
