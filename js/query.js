@@ -45,7 +45,7 @@ var composeQuery = function(query){
             "clusters": {
                 "terms": {
                     "field": "cluster",
-                    "size": 10
+                    "size": 8
                 },
                 // Word cloud per cluster
                 "aggs": {
@@ -53,6 +53,19 @@ var composeQuery = function(query){
                         "terms": {
                             "field": "title",
                             "size": 25
+                        }
+                    },
+                    // Documenti per cluster
+                    "hits": {
+                        "top_hits": {
+                            "size": 25,
+                            "sort": [
+                                {
+                                    "@timestamp": {
+                                        "order": "desc"
+                                    }
+                                }
+                            ]
                         }
                     }
                 }

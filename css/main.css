@@ -69,6 +69,19 @@ body {
 .cluster {
     display: inline-block;
     float: none;
+    cursor: pointer;
+}
+
+.cluster svg {
+    border: dotted 1px transparent;
+}
+
+.cluster:hover svg {
+    border: dotted 1px lightgray;
+}
+
+.cluster.active svg {
+    border: solid 1px lightgray;
 }
 
 /* antitrash CSS - INIZIO! >:( */
