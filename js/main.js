@@ -31,6 +31,7 @@ $(function(){
         $wordcloud        = $("#word-cloud-container"),
         $generalWordCloud = $("#background")
         $map              = $("#map-container"),
+        $cluster          = $("#cluster-container"),
         $list             = $("#list-container"),
         $modal            = $("#loading-modal"),
         $switch           = $("[name='toggle-map']"),
@@ -137,7 +138,8 @@ $(function(){
             albopop.data = {
                 generalListItems: response.hits.hits,
                 generalWordCloud: response.aggregations.words.buckets,
-                citiesWordClouds: response.aggregations.locations.buckets
+                citiesWordClouds: response.aggregations.locations.buckets,
+                clusterWordClouds: response.aggregations.clusters.buckets
             };
 
             if (!$("#elenco-comuni").text()) {
@@ -169,11 +171,31 @@ $(function(){
 
     function updateAll(){
         
-        populateGeneralCloud(albopop.data.citiesWordClouds); // general cloud as a background
+        //populateGeneralCloud(albopop.data.citiesWordClouds); // general cloud as a background
         populateCloud(albopop.data.generalWordCloud);        // general cloud is initially run also in the small cloud box
+        populateCluster(albopop.data.clusterWordClouds);
+        populateMap(albopop.data.citiesWordClouds);
         populateMap(albopop.data.citiesWordClouds);
         populateList(albopop.data.generalListItems);
         
+    }
+
+    function populateCluster(items) {
+
+        var clusters = d3.select("#cluster-container")
+            .selectAll(".cluster")
+            .data(items);
+        
+        clusters
+            .text(function(d) { return d.key + "("+d.doc_count+")"; });
+
+        clusters
+            .enter()
+            .append("div")
+            .attr("class","cluster col-xs-3")
+            .text(function(d) { return d.key.slice(0,4) + "("+d.doc_count+")"; });
+
+        clusters.exit().remove();
     }
 
     function populateMap(items) {

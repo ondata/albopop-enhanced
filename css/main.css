@@ -60,6 +60,17 @@ body {
 /*    background: url("../assets/texture.jpg");*/
 }
 
+#cluster-container {
+    white-space: nowrap;
+    overflow-y: hidden;
+    overflow-x: scroll;
+}
+
+.cluster {
+    display: inline-block;
+    float: none;
+}
+
 /* antitrash CSS - INIZIO! >:( */
 
 div#background {

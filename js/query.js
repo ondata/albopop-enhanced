@@ -42,6 +42,22 @@ var composeQuery = function(query){
         ],
         "query": queryCommand,
         "aggs": {
+            "clusters": {
+                "terms": {
+                    "field": "cluster",
+                    "size": 10
+                },
+                // Word cloud per cluster
+                "aggs": {
+                    "words": {
+                        "terms": {
+                            "field": "title",
+                            "size": 25
+                        }
+                    }
+                }
+            },
+            // Word cloud generale
             "words": {
                 "terms": {
                     "field": "title",
@@ -54,6 +70,7 @@ var composeQuery = function(query){
                     "size": 0
                 },
                 "aggs": {
+                    // Word cloud per comune
                     "words": {
                         "significant_terms": {
                             "field": "title",
@@ -76,6 +93,7 @@ var composeQuery = function(query){
                             }
                         }*/
                     },
+                    // Documenti per comune
                     "hits": {
                         "top_hits": {
                             "size": 25,
