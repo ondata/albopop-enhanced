@@ -1,6 +1,7 @@
 import random
 import csv
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.cluster import KMeans
 
 def cluster(docs):
 
@@ -13,17 +14,22 @@ def cluster(docs):
 
     print vectorizer.get_feature_names()
 
-    print corpus[0], vectorizer.inverse_transform(vectorizedCorpus[0])
+    print '\n', vectorizedCorpus[0],corpus[0], vectorizer.inverse_transform(vectorizedCorpus[0])
 
 
     # run k-means with different nCluster and random seed
-    #for nCluster in range(4,20):
-    #    for seed in range(0,10):
+    for nCluster in range(4,10):
+
+        print '\n clusters:', nCluster
+
+        for seed in range(0,3):
 
             # run k-means
-            #print nCluster, seed
+            km = KMeans(n_clusters=nCluster, random_state=seed)
+            km.fit(vectorizedCorpus)
 
             # store inertia and clusters
+            print '\t seed:', seed, '\t-->', km.inertia_
 
     # take best run of k-means (minimal inertia)
 
