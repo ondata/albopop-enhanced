@@ -33,8 +33,9 @@ def welcome(message):
             "Invia la tua stringa di ricerca dopo il comando /search. Esempio: /search matrimoni",
             "Invia /subscribe per salvare una stringa di ricerca e ricevere le notifiche ogni ora. Esempio: /subscribe matrimoni",
             "Invia /subscription per controllare la ricerca attiva.",
+            "Invia /unsubscribe per annullarla.",
             "Tip: se invii solo /subscribe, ti salvo l'ultima ricerca che mi hai mandato!",
-            "Warning: /subscribe not implemented, yet!"
+            "Warning: /subscribe backend not implemented, yet!"
         ])
     )
 
