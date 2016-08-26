@@ -74,9 +74,12 @@ $(function(){
     });
     
     // build and draw map
-    var mapSize = $map.width();
-    $map.height(mapSize*1.5);
-    albopop.map = L.map('map-container').setView([41.9, 12.5], 5);
+    var mapSize = $map.width(),
+        mapOptions = {
+            scrollWheelZoom: false
+        };
+    $map.height(mapSize*1.2);
+    albopop.map = L.map('map-container', mapOptions).setView([41.9, 12.5], 5);
     $.get('assets/italy-regions.json', {}, drawMap);
     
     // load Comuni and their coordinates
