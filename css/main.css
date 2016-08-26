@@ -21,6 +21,10 @@ body {
     background-color: rgba(245,245,245,0.9);
 }
 
+.panel-default > .panel-heading .badge {
+    float: right;
+}
+
 #loading-modal {
     text-align: center;
 }

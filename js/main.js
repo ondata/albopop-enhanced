@@ -108,7 +108,7 @@ $(function(){
         // extract query
         var query = {
                "must": $must.val(),
-                "must_not": $must_not.val()
+               "must_not": $must_not.val()
             },
             today = new Date(),
             indices = getDates(addDays(today, -14), today)
@@ -121,6 +121,7 @@ $(function(){
             keyboard: false
         });
 
+        $(".panel-heading .badge").text("");
         // ask elasticsearch
         albopop.elastic.search({
             index: indices,
@@ -146,6 +147,10 @@ $(function(){
             if (!$("#elenco-comuni").text()) {
                 $("#elenco-comuni").text(response.aggregations.locations.buckets.map(function(l) { return l.key; }).join(", "));
             };
+
+            $("#word-cloud-panel .badge").text(response.aggregations.words.buckets.length);
+            $("#list-panel .badge").text(response.hits.hits.length + "/" + response.hits.total);
+            $("#map-panel .badge").text(response.aggregations.locations.buckets.length);
             
             // update UI
             updateAll();
