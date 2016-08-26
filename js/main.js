@@ -27,7 +27,8 @@ $(function(){
         $inputs           = $form.find("input, button"),
         $must             = $("#must"),
         $must_not         = $("#must_not"),
-        $submit           = $("#submit"),
+        $submit           = $("#btn-submit"),
+        $reset            = $("#btn-reset"),
         $wordcloud        = $("#word-cloud-container"),
         $generalWordCloud = $("#background")
         $map              = $("#map-container"),
@@ -157,6 +158,13 @@ $(function(){
         });
 
         track();
+    });
+
+    $reset.click(function(e) {
+        $must.val("");
+        $must_not.val("");
+        $form.submit();
+        e.preventDefault();
     });
 
     function cleanAll(){

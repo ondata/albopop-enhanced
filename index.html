@@ -63,7 +63,7 @@
                             </li>
                             <li><strong>Ricevere aggiornamenti su una ricerca</strong>: una volta effettuata una ricerca, l'applicazione procude un feed rss
                             relativo alla sola ricerca effettuata (ad esempio, se cerchi <em>fesr</em> senza <em>matrimonio</em>, otterrai questo feed: <code>
-                            http://dev.dataninja.it/AlboPOP-enhanced/feed/?search=fesr&without=matrimonio</code>).
+                            http://dev.dataninja.it/AlboPOP-enhanced/feed/?search=fesr&amp;without=matrimonio</code>).
                             Per ricevere aggiornamento puoi ad esempio creare un tuo bot telegram nel quale inserire il feed per ricevere notifiche sul tuo cellulare.
                             Oppure attivare una ricetta su <a href="https://ifttt.com/" target="_blank">IFTTT</a> per ricevere aggiornamenti via mail,
                             tutte le volte che una delle amministrazioni pubblica un atto su un argomento per te rilevante.
@@ -75,19 +75,21 @@
                     <section id="form-container">
                         <form id="form" class="row form-inline">
                             <div class="col-xs-4">
-                                <div class="form-group"><label for="must">Cerca atti con</label> <input id="must" type="text" class="form-control" placeholder="qualsiasi parola..." value=""/></div>
-                                <div class="form-group"><label for="must_not">Parole da escludere</label> <input id="must_not" type="text" class="form-control" placeholder="non escludere nulla..." value=""/></div>
+                                <p><label for="must">Cerca atti con</label> <input id="must" type="text" class="form-control" placeholder="qualsiasi parola" value=""/>.</p>
+                                <p><label for="must_not">Escludi le parole:</label> <input id="must_not" type="text" class="form-control" placeholder="nessuna parola" value=""/>.</p>
                             </div>
-                            <div class="col-xs-3">
-                                <button id="submit" class="btn btn-primary" type="submit">Avvia la ricerca!</button>
+                            <div class="col-xs-2" style="text-align:center;">
+                                <p><button id="btn-submit" class="btn btn-primary" type="submit">Avvia la ricerca!</button></p>
+                                <p><button id="btn-reset" class="btn btn-warning btn-xs" type="reset">Reset</button></p>
                             </div>
-                            <div class="col-xs-5" id="rss-container">
-                              <a id="rss" href="#" target="_blank"><i class="fa fa-2x fa-rss-square" aria-hidden="true"></i></a>
-                              Questo è il feed rss della tua ricerca. Copialo e inseriscilo su un bot telegram o su una ricetta IFTTT per ricevere le notifiche.
+                            <div class="col-xs-5" style="text-align:right;">
+                                Questo è il <a href="https://it.wikipedia.org/wiki/Feed" target="_blank">feed RSS</a> della tua ricerca. Copialo e inseriscilo in un <a href="https://it.wikipedia.org/wiki/Aggregatore" target="_blank">aggregatore</a> o una <a href="https://ifttt.com/" target="_blank">ricetta IFTTT</a> per ricevere i nuovi documenti pubblicati sotto forma di e-mail o notifiche push sullo smartphone. Puoi anche basarci un <a href="https://telegram.org/blog/bot-revolution" target="_blank">bot Telegram</a>.
+                            </div>
+                            <div class="col-xs-1">
+                                <a id="rss" href="#" target="_blank"><i class="fa fa-4x fa-rss-square" aria-hidden="true"></i></a>
                             </div>
                         </form>
                     </section>
-
                 </div>
             </div>
 

@@ -11,6 +11,10 @@ body {
     width: 100%;
 }
 
+#reset {
+    width: 50%;
+}
+
 .panel {
     margin-top: 1em;
     margin-bottom: 1em;
