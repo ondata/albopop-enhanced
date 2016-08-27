@@ -20,6 +20,11 @@ $(function(){
         hnav = $("#header nav").height(),
         activeMarker = null;
 
+    var today = new Date(),
+        indices = getDates(addDays(today, -14), today)
+            .map(function(dt) { return "albopop-v3-"+dt.toISOString().slice(0,10).replace(/-/g,"."); })
+            .join(",");
+
     $("body").css({"padding-top":hnav});
     
     var $container        = $("#main-container"),
@@ -33,7 +38,8 @@ $(function(){
         $generalWordCloud = $("#background")
         $map              = $("#map-container"),
         $list             = $("#list-container"),
-        $modal            = $("#loading-modal"),
+        $loading          = $("#loading-modal"),
+        $modal            = $("#mlt-modal"),
         $switch           = $("[name='toggle-map']"),
         $rss              = $("#rss");
 
@@ -110,14 +116,10 @@ $(function(){
         var query = {
                "must": $must.val(),
                "must_not": $must_not.val()
-            },
-            today = new Date(),
-            indices = getDates(addDays(today, -14), today)
-                .map(function(dt) { return "albopop-v3-"+dt.toISOString().slice(0,10).replace(/-/g,"."); })
-                .join(",");
+            };
         
         // loading...
-        $modal.modal({
+        $loading.modal({
             backdrop: 'static',
             keyboard: false
         });
@@ -136,7 +138,7 @@ $(function(){
             console.log(response);
             
             // close loading modal
-            $modal.modal('hide');
+            $loading.modal('hide');
             
             // store data for word clouds and docs list
             albopop.data = {
@@ -218,17 +220,28 @@ $(function(){
         // populate articles list
         $list.empty();
         if (items && items.length) {
-            _.each(items, function(doc){
-                //console.log(doc);
-                var d = doc['_source'];
-                $list.append(
-                    '<a href="'+d.link+'" target="_blank" class="list-group-item">' +
-                        '<h4 class="list-group-item-heading">Da ' + d.source.title + ' il ' + d['@timestamp'] + '</h4>' +
-                        '<p class="list-group-item-text">' + d.title + '</p>' +
-                        '<p class="list-group-item-tags">'+d.source.tags.map(function(t) { return '<span class="label label-info">'+t+'</span>'; })+'</p>' + 
-                    '</a>' 
-                );
-            });
+            d3.select($list[0]).selectAll("a")
+                .data(items.map(function(d) { return d['_source']; }))
+                .enter()
+                .append("a")
+                .attr("href", function(d) { return d.link; })
+                .attr("target","_blank")
+                .attr("class","list-group-item")
+                .html(function(d) {
+                    return '' + 
+                            '<div class="similar-plus"><a href="#"><span class="glyphicon glyphicon-plus"></span></a></div>' +
+                            '<h4 class="list-group-item-heading">Da ' + d.source.title + ' il ' + d['@timestamp'] + '</h4>' +
+                            '<p class="list-group-item-text">' + d.title + '</p>' +
+                            '<p class="list-group-item-tags">'+d.source.tags.map(function(t) { return '<span class="label label-info">'+t+'</span>'; })+'</p>' + 
+                    '';
+                });
+            d3.select($list[0]).selectAll("a")
+                .select(".similar-plus")
+                .on("click", function(d) {
+                    mlt(d);
+                    d3.event.preventDefault();
+                });
+
         } else {
             $list.append(
                 '<a href="#" class="list-group-item">' +
@@ -312,6 +325,52 @@ $(function(){
         } else {
             $wordcloud.text("Nessuna parola trovata...");
         }
+    }
+
+    function mlt(d) {
+        var $header = $modal.find(".modal-content .modal-body p"),
+            $body = $modal.find(".modal-content .modal-body .list-group");
+        $header.html('<a href="' + d.link + '" target="_blank" class="modal-item-link"><span class="glyphicon glyphicon-new-window"></span></a> Da ' + d.source.title + ', &quot;' + d.title + '&quot; (' + d['@timestamp'] + ')');
+        $body.empty();
+        albopop.elastic.search({
+            index: indices,
+            type: "rss_item",
+            body: {
+                "query": {
+                    "more_like_this": {
+                        "fields": ["title"],
+                        "like": d.title,
+                        "min_term_freq": 1,
+                        "max_query_terms": 12
+                    }
+                }
+            }
+        }, function(error, response) {
+
+            if(error){
+                console.error(error);
+                return;
+            }
+            
+            d3.select($body[0])
+                .selectAll("a")
+                .data(response.hits.hits.map(function(d) { return d['_source']; }))
+                .enter()
+                .append("a")
+                .attr("href", function(d) { return d.link; })
+                .attr("target","_blank")
+                .attr("class","list-group-item")
+                .html(function(d) {
+                    return '' + 
+                            '<h4 class="list-group-item-heading">Da ' + d.source.title + ' il ' + d['@timestamp'] + '</h4>' +
+                            '<p class="list-group-item-text">' + d.title + '</p>' +
+                            '<p class="list-group-item-tags">'+d.source.tags.map(function(t) { return '<span class="label label-info">'+t+'</span>'; })+'</p>' + 
+                    '';
+                });
+
+            $modal.modal("show");
+
+        });
     }
 
     function markerClicked(event){
