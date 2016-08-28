@@ -101,6 +101,6 @@ if __name__ == '__main__':
 
     # cluster the docs with generator
     for d in kmeans(docs, 5):
-    for d in LatentDA(docs, 5):
-    for d in NMFactorization(docs, 5):
+    #for d in LatentDA(docs, 5):
+    #for d in NMFactorization(docs, 5):
         print d['cluster']
