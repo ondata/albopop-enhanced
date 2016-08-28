@@ -1,66 +1,63 @@
 
 import random
+import numpy as np
 import csv
+from sklearn.cluster.k_means_ import KMeans
 import string
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.cluster import KMeans
 from sklearn.decomposition import NMF, LatentDirichletAllocation
 
-def cluster(docs):
+
+# glorious kmeans
+def kmeans(docs, n_clusters):
+
+    model = KMeans(n_clusters=n_clusters, random_state=0)
+    return cluster(docs, model, kmeansAssignation)
+
+# matrix factorization
+def NMFactorization(docs, n_clusters):
+    model = NMF(n_components=n_clusters, random_state=0)
+    return cluster(docs, model, argMaxAssignation)
+
+# latent allocation
+def LatentDA(docs, n_clusters):
+    model = LatentDirichletAllocation(n_topics=n_clusters, random_state=0)
+    return cluster(docs, model, argMaxAssignation)
+
+
+def kmeansAssignation(model, vector):
+    prediction = model.predict(vector)
+    return prediction[0]
+
+def argMaxAssignation(model, vector):
+    transform = model.transform(vector)
+    return np.argmax(transform[0])
+
+
+def cluster(docs, model, assignationFunction):
 
     # data preparation
-    #vectorizer = TfidfVectorizer(tokenizer=tokenizeAndClean, min_df=0.01, max_df=0.5, max_features=1000)
-    vectorizer = CountVectorizer(tokenizer=tokenizeAndClean, min_df=0.01, max_df=0.5, max_features=1000)
+    vectorizer = TfidfVectorizer(tokenizer=tokenizeAndClean, min_df=0.01, max_df=0.5, max_features=1000)
     corpus = []
     for doc in docs:
         corpus.append(doc['title'])
     vectorizedCorpus = vectorizer.fit_transform(corpus)
 
-    # print vocabulary
-    #for i, w in enumerate(vectorizer.get_feature_names()):
-    #    print w, vectorizer.idf_[i]
-
-    # run k-means with different nCluster and random seed
-    for nCluster in range(4, 10):
-
-        print '\n clusters:', nCluster
-
-        for seed in range(0,1):
-
-            ######### k-means ###########
-            km = KMeans(n_clusters=nCluster, random_state=seed)
-            km.fit(vectorizedCorpus)
-
-            # store inertia and clusters
-            print '\t seed:', seed, '\t-->', km.inertia_
-            #for centroid in km.cluster_centers_:
-            #    print '\t\t', getMostImportantWords(centroid, vectorizer)
-            #############################
-
-            ######### matrix factorization ###########
-            #mf = NMF(n_components=nCluster, random_state=seed)
-            #mf = LatentDirichletAllocation(n_topics=nCluster, random_state=seed)
-            #mf.fit(vectorizedCorpus)
-
-            # store inertia and clusters
-            #print '\t seed:', seed#, '\t-->', mf.reconstruction_err_
-            #for comp in mf.components_:
-            #    print '\t\t', getMostImportantWords(comp, vectorizer)
-            #############################
-
-            ######## examples ###########
-            #print '=============='
-            #for i, doc in enumerate(corpus):
-            #    print doc
-            #    print mf.transform(vectorizedCorpus[i]), '\n'
-            #print '==============\n'
-
-
-    # take best run of k-means (minimal inertia)
+    # run clustering
+    model.fit(vectorizedCorpus)
 
     # assign each document a cluster and yield
-    for doc in docs:
-        doc["cluster"] = 23
+    for i, doc in enumerate(docs):
+
+        # run prediction
+        vectorizedTitle = vectorizedCorpus[i]
+        doc['cluster']  = assignationFunction(model, vectorizedTitle)
+
+        #print 'original text:', doc['title']
+        #print 'decodedTitle', vectorizer.inverse_transform(vectorizedTitle)
+        #print 'CLUSTER:', doc['cluster']
+
         yield doc
 
 def tokenizeAndClean(text):
@@ -75,7 +72,7 @@ def tokenizeAndClean(text):
 
     tokens = text.split(' ')
 
-    #return tokens
+    #return tokens with more than 4 letters
     return filter(lambda w: len(w) > 4, tokens)
 
 def getMostImportantWords(centroid, vectorizer):
@@ -102,6 +99,8 @@ if __name__ == '__main__':
             doc = { "id": row[0], "index": row[1], "title": row[2] }
             docs.append(doc)
 
-    # cluster the docs
-    for d in cluster(docs):
-        2#print d
+    # cluster the docs with generator
+    for d in kmeans(docs, 5):
+    for d in LatentDA(docs, 5):
+    for d in NMFactorization(docs, 5):
+        print d['cluster']

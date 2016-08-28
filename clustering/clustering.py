@@ -40,7 +40,10 @@ class Clustering:
             else:
                 print self.delimiter.join([item.meta.id,item.meta.index,title]).encode('utf-8')
 
-        clusters = bbcluster.cluster(docs)
+        n_clusters = 5
+        clusters = bbcluster.kmeans(docs, n_clusters)
+        #clusters = bbcluster.NMFactorization(docs, n_clusters)
+        #clusters = bbcluster.LatentDA(docs, n_clusters)
 
         helpers.bulk(
             self.es,

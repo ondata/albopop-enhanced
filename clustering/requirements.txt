@@ -4,3 +4,4 @@ datetime
 csv
 random
 sklearn
+numpy
