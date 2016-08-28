@@ -3,3 +3,4 @@ elasticsearch-dsl
 datetime
 csv
 random
+sklearn
