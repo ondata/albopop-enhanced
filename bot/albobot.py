@@ -5,7 +5,7 @@
 # Author: Sara Borroni <sara.borroni@pangeaformazione.it>
 # Contributor: Alessio Cimarelli <jenkin@dataninja.it>
 
-import requests, telebot
+import requests, pickle, telebot
 from dateutil.parser import parse
 
 # Bot's uid
@@ -18,9 +18,23 @@ without = ""
 location = ""
 
 # Databases (simple dicts)
-history = {}
-subscriptions = {}
+try:
+    with open("history.pickle") as f:
+        history = pickle.load(f)
+except:
+    history = {}
+
+try:
+    with open("subscriptions.pickle") as f:
+        subscriptions = pickle.load(f)
+except:
+    subscriptions = {}
+
 limit = 5
+
+def save(obj,filename):
+    with open(filename+".pickle","w") as f:
+        pickle.dump(obj,f)
 
 # Handle '/start' and '/help'
 @bot.message_handler(commands=['help', 'start'])
@@ -94,6 +108,8 @@ def ask(chat_id, text):
                     "update": parse(docs[0]['@timestamp'])
                 }
 
+                save(history,"history")
+
     # ... alert the error!
     except:
 
@@ -114,6 +130,7 @@ def subscribe(message):
 
         subscriptions[chat_id] = history[chat_id]
         bot.send_message(chat_id, u"Ottimo, ho salvato la ricerca \"%s\", ti avverto quando c'è qualcosa di nuovo :P" % subscriptions[chat_id]['text'])
+        save(subscriptions,"subscriptions")
 
     else:
         error(chat_id)
@@ -137,6 +154,7 @@ def unsubscribe(message):
 
     if chat_id in subscriptions:
         del subscriptions[chat_id]
+        save(subscriptions,"subscriptions")
 
     bot.send_message(chat_id, u"Nessuna ricerca attiva :(")
 
