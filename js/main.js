@@ -203,6 +203,11 @@ $(function(){
                     var clusterData = _.find(albopop.data.clusterWordClouds, function(c){
                         return (c.key == d.key);
                     });
+                    activeMarker = null;
+                    _.each(albopop.markers, function(m){    // reset all markers' colors
+                        m.setIcon(nonClickedMarker);
+                        m.closePopup();
+                    });
                     var clusterDocs  = clusterData.hits.hits.hits;
                     populateList(clusterDocs);
                 }
@@ -417,6 +422,7 @@ $(function(){
         _.each(albopop.markers, function(m){    // reset all markers' colors
             m.setIcon(nonClickedMarker);
         });
+        d3.select("#cluster-container").selectAll(".cluster").classed("active",false);
 
         if (activeMarker != this.options.title) {
             activeMarker = this.options.title;
