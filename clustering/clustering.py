@@ -9,6 +9,7 @@ import csv
 class Clustering:
 
     delimiter = ";"
+    clusters = 8
 
     def __init__(self, prefix, days = 15, strf = "%Y.%m.%d"):
         self.es = Elasticsearch()
@@ -40,10 +41,9 @@ class Clustering:
             else:
                 print self.delimiter.join([item.meta.id,item.meta.index,title]).encode('utf-8')
 
-        n_clusters = 5
-        clusters = bbcluster.kmeans(docs, n_clusters)
-        #clusters = bbcluster.NMFactorization(docs, n_clusters)
-        #clusters = bbcluster.LatentDA(docs, n_clusters)
+        clusters = bbcluster.kmeans(docs, self.clusters)
+        #clusters = bbcluster.NMFactorization(docs, self.clusters)
+        #clusters = bbcluster.LatentDA(docs, self.clusters) # Not available in Debian 7 Wheezy
 
         helpers.bulk(
             self.es,

@@ -6,7 +6,7 @@ from sklearn.cluster.k_means_ import KMeans
 import string
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.cluster import KMeans
-from sklearn.decomposition import NMF, LatentDirichletAllocation
+#from sklearn.decomposition import NMF, LatentDirichletAllocation
 
 
 # glorious kmeans
@@ -21,9 +21,9 @@ def NMFactorization(docs, n_clusters):
     return cluster(docs, model, argMaxAssignation)
 
 # latent allocation
-def LatentDA(docs, n_clusters):
-    model = LatentDirichletAllocation(n_topics=n_clusters, random_state=0)
-    return cluster(docs, model, argMaxAssignation)
+#def LatentDA(docs, n_clusters):
+#    model = LatentDirichletAllocation(n_topics=n_clusters, random_state=0)
+#    return cluster(docs, model, argMaxAssignation)
 
 
 def kmeansAssignation(model, vector):
@@ -52,7 +52,7 @@ def cluster(docs, model, assignationFunction):
 
         # run prediction
         vectorizedTitle = vectorizedCorpus[i]
-        doc['cluster']  = assignationFunction(model, vectorizedTitle)
+        doc['cluster']  = 'c'+str(assignationFunction(model, vectorizedTitle))
 
         #print 'original text:', doc['title']
         #print 'decodedTitle', vectorizer.inverse_transform(vectorizedTitle)

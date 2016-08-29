@@ -1,7 +1,6 @@
 elasticsearch
 elasticsearch-dsl
 datetime
-csv
-random
-sklearn
 numpy
+scipy
+sklearn
