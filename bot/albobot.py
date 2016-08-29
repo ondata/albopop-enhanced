@@ -5,8 +5,9 @@
 # Author: Sara Borroni <sara.borroni@pangeaformazione.it>
 # Contributor: Alessio Cimarelli <jenkin@dataninja.it>
 
-import requests, pickle, telebot
+import requests, pickle, time, telebot
 from dateutil.parser import parse
+from threading import Thread
 
 # Bot's uid
 API_TOKEN = '238417787:AAHSJSezf5JLxsT01NcarHx6xIgyuK5Jr_A'
@@ -31,15 +32,25 @@ except:
     subscriptions = {}
 
 limit = 5
+interval = 3600 # Check every hour
+
+
+def now():
+    return time.strftime("%Y-%m-%d %H:%M:%S")
+
 
 def save(obj,filename):
     with open(filename+".pickle","w") as f:
         pickle.dump(obj,f)
 
+
 # Handle '/start' and '/help'
 @bot.message_handler(commands=['help', 'start'])
 def welcome(message):
     chat_id = message.chat.id
+
+    print "[%s] Help requested by %d" % ( now(), chat_id )
+
     bot.send_message(
         chat_id,
         "\n".join([
@@ -61,14 +72,18 @@ def search(message):
 
     chat_id = message.chat.id
     text = message.text.replace("/search","").strip()
+
+    print "[%s] Answer to %s request from %d" % ( now(), text, chat_id )
+
     ask(chat_id, text)
 
 
-def ask(chat_id, text):
+def ask(chat_id, text, verbose = True):
 
     # Remote feed url
     feed = "http://dev.dataninja.it/AlboPOP-enhanced/feed/"
-    bot.send_message(chat_id, "Ok, fammi dare un'occhiata...")
+    if verbose:
+        bot.send_message(chat_id, "Ok, fammi dare un'occhiata...")
 
     # If something goes wrong during fetching...
     try:
@@ -77,7 +92,8 @@ def ask(chat_id, text):
 
         if not results:
 
-            bot.send_message(chat_id, "Mi spiace, non ho trovato niente al riguardo ;(")
+            if verbose:
+                bot.send_message(chat_id, "Mi spiace, non ho trovato niente al riguardo ;(")
 
         else:
 
@@ -93,13 +109,15 @@ def ask(chat_id, text):
 
             if not docs:
 
-                bot.send_message(chat_id, "Mi spiace, non c'è nulla di nuovo :|")
+                if verbose:
+                    bot.send_message(chat_id, "Mi spiace, non c'è nulla di nuovo :|")
 
             else:
 
                 send(chat_id, docs[0:limit])
 
-                bot.send_message(chat_id, "Ci sono %d documenti nuovi riguardo \"%s\" (te ne ho mandati solo %d) :D" % ( len(docs), text, limit ))
+                if verbose:
+                    bot.send_message(chat_id, "Ci sono %d documenti nuovi riguardo \"%s\" (te ne ho mandati solo %d) :D" % ( len(docs), text, limit ))
 
                 # Remember only the last search
                 history[chat_id] = {
@@ -122,6 +140,8 @@ def subscribe(message):
     chat_id = message.chat.id
     text = message.text.replace("/subscribe","").strip()
 
+    print "[%s] Subscribe %d to %s" % ( now(), chat_id, text )
+
     # With search string, ask before subscription
     if text:
         ask(chat_id, text)
@@ -141,6 +161,8 @@ def subscription(message):
 
     chat_id = message.chat.id
 
+    print "[%s] Send active subscription to %d" % ( now(), chat_id )
+
     if chat_id in subscriptions:
         bot.send_message(chat_id, u"In questo momento hai la ricerca \"%s\" attiva ;)" % subscriptions[chat_id]['text'])
     else:
@@ -151,6 +173,8 @@ def subscription(message):
 def unsubscribe(message):
 
     chat_id = message.chat.id
+
+    print "[%s] Unsubscribe %d" % ( now(), chat_id )
 
     if chat_id in subscriptions:
         del subscriptions[chat_id]
@@ -163,10 +187,15 @@ def unsubscribe(message):
 def fetch(chat_id, url, params):
 
     r = requests.get(url, params = params)
+
+    print "[%s] Fetch %s" % ( now(), r.url )
+
     return r.json()
 
 
 def send(chat_id, docs):
+
+    print "[%s] Send %d documents to %d" % ( now(), len(docs), chat_id )
 
     for doc in docs:
         bot.send_message(
@@ -175,8 +204,30 @@ def send(chat_id, docs):
         )
 
 
+def check():
+
+    global subscriptions
+
+    while True:
+
+        print "[%s] Automatic check for %d subscriptions" % ( now(), len(subscriptions) )
+
+        for chat_id in subscriptions:
+
+            ask(chat_id, subscriptions[chat_id]['text'], False)
+            subscriptions[chat_id] = history[chat_id]
+
+        save(subscriptions,"subscriptions")
+        time.sleep(interval)
+
+
 def error(chat_id):
+    print "[%s] Errore per %d" % ( now(), chat_id )
     bot.send_message(chat_id, "Mi spiace, ho avuto un problema e ora sono confuso :O")
+
+
+thread = Thread(target=check)
+thread.start()
 
 bot.polling(none_stop=False, interval=0)
 
