@@ -226,8 +226,14 @@ def error(chat_id):
     bot.send_message(chat_id, "Mi spiace, ho avuto un problema e ora sono confuso :O")
 
 
+def go():
+    try:
+        bot.polling(none_stop=False, interval=0)
+    except:
+        go()
+
 thread = Thread(target=check)
 thread.start()
 
-bot.polling(none_stop=False, interval=0)
+go()
 
