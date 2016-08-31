@@ -1,0 +1,6 @@
+requests
+pickle
+telebot
+dateutil
+time
+threading

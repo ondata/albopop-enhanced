@@ -20,6 +20,11 @@ $(function(){
         hnav = $("#header nav").height(),
         activeMarker = null;
 
+    var today = new Date(),
+        indices = getDates(addDays(today, -14), today)
+            .map(function(dt) { return "albopop-v3-"+dt.toISOString().slice(0,10).replace(/-/g,"."); })
+            .join(",");
+
     $("body").css({"padding-top":hnav});
     
     var $container        = $("#main-container"),
@@ -27,12 +32,15 @@ $(function(){
         $inputs           = $form.find("input, button"),
         $must             = $("#must"),
         $must_not         = $("#must_not"),
-        $submit           = $("#submit"),
+        $submit           = $("#btn-submit"),
+        $reset            = $("#btn-reset"),
         $wordcloud        = $("#word-cloud-container"),
         $generalWordCloud = $("#background")
         $map              = $("#map-container"),
+        $cluster          = $("#cluster-container"),
         $list             = $("#list-container"),
-        $modal            = $("#loading-modal"),
+        $loading          = $("#loading-modal"),
+        $modal            = $("#mlt-modal"),
         $switch           = $("[name='toggle-map']"),
         $rss              = $("#rss");
 
@@ -74,9 +82,12 @@ $(function(){
     });
     
     // build and draw map
-    var mapSize = $map.width();
-    $map.height(mapSize*1.5);
-    albopop.map = L.map('map-container').setView([41.9, 12.5], 5);
+    var mapSize = $map.width(),
+        mapOptions = {
+            scrollWheelZoom: false
+        };
+    $map.height(mapSize*1.2);
+    albopop.map = L.map('map-container', mapOptions).setView([41.9, 12.5], 5);
     $.get('assets/italy-regions.json', {}, drawMap);
     
     // load Comuni and their coordinates
@@ -105,19 +116,16 @@ $(function(){
         // extract query
         var query = {
                "must": $must.val(),
-                "must_not": $must_not.val()
-            },
-            today = new Date(),
-            indices = getDates(addDays(today, -14), today)
-                .map(function(dt) { return "albopop-v3-"+dt.toISOString().slice(0,10).replace(/-/g,"."); })
-                .join(",");
+               "must_not": $must_not.val()
+            };
         
         // loading...
-        $modal.modal({
+        $loading.modal({
             backdrop: 'static',
             keyboard: false
         });
 
+        $(".panel-heading .badge").text("");
         // ask elasticsearch
         albopop.elastic.search({
             index: indices,
@@ -131,24 +139,36 @@ $(function(){
             console.log(response);
             
             // close loading modal
-            $modal.modal('hide');
+            $loading.modal('hide');
             
             // store data for word clouds and docs list
             albopop.data = {
                 generalListItems: response.hits.hits,
                 generalWordCloud: response.aggregations.words.buckets,
-                citiesWordClouds: response.aggregations.locations.buckets
+                citiesWordClouds: response.aggregations.locations.buckets,
+                clusterWordClouds: response.aggregations.clusters.buckets
             };
 
             if (!$("#elenco-comuni").text()) {
                 $("#elenco-comuni").text(response.aggregations.locations.buckets.map(function(l) { return l.key; }).join(", "));
             };
+
+            $("#word-cloud-panel .badge").text(response.aggregations.words.buckets.length);
+            $("#list-panel .badge").text(response.hits.hits.length + "/" + response.hits.total);
+            $("#map-panel .badge").text(response.aggregations.locations.buckets.length);
             
             // update UI
             updateAll();
         });
 
         track();
+    });
+
+    $reset.click(function(e) {
+        $must.val("");
+        $must_not.val("");
+        $form.submit();
+        e.preventDefault();
     });
 
     function cleanAll(){
@@ -162,6 +182,7 @@ $(function(){
         // delete clouds
         $wordcloud.empty();
         $generalWordCloud.empty();
+        $cluster.empty();
         
         // delete articles
         $list.empty();
@@ -169,11 +190,125 @@ $(function(){
 
     function updateAll(){
         
-        populateGeneralCloud(albopop.data.citiesWordClouds); // general cloud as a background
+        //populateGeneralCloud(albopop.data.citiesWordClouds); // general cloud as a background
         populateCloud(albopop.data.generalWordCloud);        // general cloud is initially run also in the small cloud box
+        populateCluster(albopop.data.clusterWordClouds);
+        populateMap(albopop.data.citiesWordClouds);
         populateMap(albopop.data.citiesWordClouds);
         populateList(albopop.data.generalListItems);
         
+    }
+
+    function populateCluster(items) {
+
+        d3.select("#cluster-container p").remove();
+
+        var clusters = d3.select("#cluster-container")
+            .selectAll(".cluster")
+            .data(items, function(d) { return d.key; });
+        
+        clusters
+            .enter()
+            .append("div")
+            .attr("class","cluster col-xs-3")
+            .on("click", function(d) {
+                if (d3.select(this).classed("active")) {
+                    populateList(albopop.data.generalListItems);
+                    d3.select(this).classed("active",false);
+                } else {
+                    d3.select("#cluster-container").selectAll(".cluster").classed("active",false);
+                    d3.select(this).classed("active",true);
+                    var clusterData = _.find(albopop.data.clusterWordClouds, function(c){
+                        return (c.key == d.key);
+                    });
+                    activeMarker = null;
+                    _.each(albopop.markers, function(m){    // reset all markers' colors
+                        m.setIcon(nonClickedMarker);
+                        m.closePopup();
+                    });
+                    var clusterDocs  = clusterData.hits.hits.hits;
+                    populateList(clusterDocs);
+                }
+            })
+            .append("svg")
+            .attr("width", function() { return Math.floor($(this).parent().width()); })
+            .attr("height", function() { return Math.floor($(this).parent().width()); })
+            .append("g")
+            .attr("transform", function() {
+                var w = +$(this).parent().attr("width");
+                return "translate("+(w/2)+","+(w/2)+")";
+            });
+
+        clusters.exit().remove();
+
+        d3.select("#cluster-container")
+            .selectAll(".cluster")
+            .select("svg > g")
+            .each(function(d) {
+
+                var cloud = d3.layout.cloud();
+
+                var container = d3.select(this),
+                    w = +$(this).parent().attr("width"),
+                    items = d.words.buckets,
+                    l = function(d) { return d.doc_count || 1; },
+                    s = d3.scale.sqrt().domain(d3.extent(items.map(l))).range([8,32]),
+                    c = d3.scale.category20();
+
+                cloud
+                    .size([w,w])
+                    .words(items)
+                    .text(function(d) { return d.key; })
+                    .fontSize(function(d) { return s(l(d)); })
+                    .font("Impact")
+                    .rotate(function() { return ~~(Math.random() * 2) * 0; })
+                    .padding(2)
+                    .square(true)
+                    .on('end', function(d) {
+
+                        var words = container.selectAll('text')
+                            .data(d, function(d) { return d.text; });
+
+                        words
+                            .attr('transform', function(d){
+                                return 'translate(' + [d.x, d.y] + ')rotate(' + d.rotate + ')';
+                            })
+                            .style('font-size', function(d){
+                                return d.size + 'px';
+                            })
+                            /*.style('fill', function(d, i){
+                                var colorIndex = i % 20;
+                                return c(colorIndex);
+                            })*/
+                            .text(function(d){ return d.text });
+
+                        words
+                            .enter()
+                            .append('text')
+                            .attr('transform', function(d){
+                                return 'translate(' + [d.x, d.y] + ')rotate(' + d.rotate + ')';
+                            })
+                            .attr('text-anchor', 'middle')
+                            .style('font-family', 'Impact')
+                            .style('font-size', function(d){
+                                return d.size + 'px';
+                            })
+                            .style('fill', function(d, i){
+                                var colorIndex = i % 20;
+                                return c(colorIndex);
+                            })
+                            .text(function(d){ return d.text });
+
+                        words.exit().remove();
+
+                    });
+
+                cloud.start();
+            });
+
+        if (!items || !items.length) {
+            d3.select("#cluster-container").append("p").text("Nessun cluster trovato...");
+        }
     }
 
     function populateMap(items) {
@@ -202,17 +337,28 @@ $(function(){
         // populate articles list
         $list.empty();
         if (items && items.length) {
-            _.each(items, function(doc){
-                //console.log(doc);
-                var d = doc['_source'];
-                $list.append(
-                    '<a href="'+d.link+'" target="_blank" class="list-group-item">' +
-                        '<h4 class="list-group-item-heading">Da ' + d.source.title + ' il ' + d['@timestamp'] + '</h4>' +
-                        '<p class="list-group-item-text">' + d.title + '</p>' +
-                        '<p class="list-group-item-tags">'+d.source.tags.map(function(t) { return '<span class="label label-info">'+t+'</span>'; })+'</p>' + 
-                    '</a>' 
-                );
-            });
+            d3.select($list[0]).selectAll("a")
+                .data(items.map(function(d) { return d['_source']; }))
+                .enter()
+                .append("a")
+                .attr("href", function(d) { return d.link; })
+                .attr("target","_blank")
+                .attr("class","list-group-item")
+                .html(function(d) {
+                    return '' + 
+                            '<div class="similar-plus"><a href="#"><span class="glyphicon glyphicon-plus"></span></a></div>' +
+                            '<h4 class="list-group-item-heading">Da ' + d.source.title + ' il ' + d['@timestamp'] + '</h4>' +
+                            '<p class="list-group-item-text">' + d.title + '</p>' +
+                            '<p class="list-group-item-tags">'+d.source.tags.map(function(t) { return '<span class="label label-info">'+t+'</span>'; })+'</p>' + 
+                    '';
+                });
+            d3.select($list[0]).selectAll("a")
+                .select(".similar-plus")
+                .on("click", function(d) {
+                    mlt(d);
+                    d3.event.preventDefault();
+                });
+
         } else {
             $list.append(
                 '<a href="#" class="list-group-item">' +
@@ -276,6 +422,7 @@ $(function(){
 
         if (items && items.length) {
             // build word cloud
+            $wordcloud.find("p").remove();
             var cloudSize = $wordcloud.width(),
                 l = function(d) { return d.score || d.doc_count || 1; },
                 s = d3.scale.sqrt().domain(d3.extent(items.map(l))).range([10,36]);
@@ -294,8 +441,54 @@ $(function(){
                 .on('end', drawCloud);
             albopop.cloudLayout.start();    // method 'start' not chainable (returns undefined)
         } else {
-            $wordcloud.text("Nessuna parola trovata...");
+            $wordcloud.append("p").text("Nessuna parola trovata...");
         }
+    }
+
+    function mlt(d) {
+        var $header = $modal.find(".modal-content .modal-body p"),
+            $body = $modal.find(".modal-content .modal-body .list-group");
+        $header.html('<a href="' + d.link + '" target="_blank" class="modal-item-link"><span class="glyphicon glyphicon-new-window"></span></a> Da ' + d.source.title + ', &quot;' + d.title + '&quot; (' + d['@timestamp'] + ')');
+        $body.empty();
+        albopop.elastic.search({
+            index: indices,
+            type: "rss_item",
+            body: {
+                "query": {
+                    "more_like_this": {
+                        "fields": ["title"],
+                        "like": d.title,
+                        "min_term_freq": 1,
+                        "max_query_terms": 12
+                    }
+                }
+            }
+        }, function(error, response) {
+
+            if(error){
+                console.error(error);
+                return;
+            }
+            
+            d3.select($body[0])
+                .selectAll("a")
+                .data(response.hits.hits.map(function(d) { return d['_source']; }))
+                .enter()
+                .append("a")
+                .attr("href", function(d) { return d.link; })
+                .attr("target","_blank")
+                .attr("class","list-group-item")
+                .html(function(d) {
+                    return '' + 
+                            '<h4 class="list-group-item-heading">Da ' + d.source.title + ' il ' + d['@timestamp'] + '</h4>' +
+                            '<p class="list-group-item-text">' + d.title + '</p>' +
+                            '<p class="list-group-item-tags">'+d.source.tags.map(function(t) { return '<span class="label label-info">'+t+'</span>'; })+'</p>' + 
+                    '';
+                });
+
+            $modal.modal("show");
+
+        });
     }
 
     function markerClicked(event){
@@ -304,6 +497,7 @@ $(function(){
         _.each(albopop.markers, function(m){    // reset all markers' colors
             m.setIcon(nonClickedMarker);
         });
+        d3.select("#cluster-container").selectAll(".cluster").classed("active",false);
 
         if (activeMarker != this.options.title) {
             activeMarker = this.options.title;
@@ -374,7 +568,7 @@ $(function(){
             .attr('text-anchor', 'middle')
             .style('font-family', 'Impact')
             .style('font-size', function(d){
-                return d.size;
+                return d.size + "px";
             })
             .style('fill', function(d, i){
                 var colorIndex = i % 20;
