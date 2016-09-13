@@ -6,9 +6,9 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Elasticsearch\Client;
 
-function fromEs($search,$without,$location,$size) {
+function fromEs($search,$without,$location,$tags,$size) {
 
-    if ($search or $without or  $location) {
+    if ($search or $without or $location or $tags[0]) {
 
         $query = [ "bool" => [] ];
 
@@ -39,6 +39,15 @@ function fromEs($search,$without,$location,$size) {
             ];
         }
 
+        if ($tags[0]) {
+            $query['bool']['must'] = $query['bool']['must'] or [];
+            $query['bool']['must'][] = [
+                "terms" => [
+                    "source.tags" => $tags
+                ]
+            ];
+        }
+
     } else {
 
         $query = [ "match_all" => [] ];
@@ -49,14 +58,14 @@ function fromEs($search,$without,$location,$size) {
 	# https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/_search_operations.html
 	$client = new Elasticsearch\Client();
 
-	$today = new DateTime();
-    $fifteendaysago = (new DateTime())->add(DateInterval::createFromDateString('15 days ago'));
+    $tomorrow = (new DateTime())->add(DateInterval::createFromDateString('tomorrow'));
+    $fourteendaysago = (new DateTime())->add(DateInterval::createFromDateString('14 days ago'));
 	$prefix = "albopop-v3";
     $indices = [];
     $dts = new DatePeriod(
-        $fifteendaysago,
+        $fourteendaysago,
         new DateInterval('P1D'),
-        $today
+        $tomorrow
     );
 
     foreach ($dts as $dt) {
