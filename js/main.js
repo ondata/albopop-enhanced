@@ -21,9 +21,7 @@ $(function(){
         activeMarker = null;
 
     var today = new Date(),
-        indices = getDates(addDays(today, -14), today)
-            .map(function(dt) { return "albopop-v3-"+dt.toISOString().slice(0,10).replace(/-/g,"."); })
-            .join(",");
+        indices = "<albopop-v3-{now-15d}>";
 
     $("body").css({"padding-top":hnav});
     
@@ -613,21 +611,6 @@ $(function(){
             .text(function(d){ return d.text });
     }
 });
-
-var getDates = function(startDate, endDate) {
-  var dates = [],
-      currentDate = startDate,
-      addDays = function(days) {
-        var date = new Date(this.valueOf());
-        date.setDate(date.getDate() + days);
-        return date;
-      };
-  while (currentDate <= endDate) {
-    dates.push(currentDate);
-    currentDate = addDays.call(currentDate, 1);
-  }
-  return dates;
-};
 
 var addDays = function(date, days) {
     var result = new Date(date);
