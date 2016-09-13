@@ -16,7 +16,7 @@ class Clustering:
         self.s = Search(
             using = self.es,
             index = self.indices(prefix,days,strf)
-        ).query("match_all")
+        ).query("match_all").params(ignore_unavailable=True)
 
     def indices(self, prefix, days, strf):
         today = date.today()

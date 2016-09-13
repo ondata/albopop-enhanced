@@ -1,6 +1,6 @@
 var composeQuery = function(query){
     
-    if(!query || (!query.must && !query.must_not)){
+    if(!query || (!query.must && !query.must_not && !query.must_tags.length)){
 
         queryCommand = {
             "match_all": {}
@@ -13,19 +13,30 @@ var composeQuery = function(query){
         };
 
         if(query.must) {
-            queryCommand.bool.must = {
+            queryCommand.bool.must = queryCommand.bool.must || [];
+            queryCommand.bool.must.push({
                 "match": {
                     "title": query.must
                 }
-            };
+            });
+        }
+
+        if(query.must_tags.length) {
+            queryCommand.bool.must = queryCommand.bool.must || [];
+            queryCommand.bool.must.push({
+                "terms": {
+                    "source.tags": query.must_tags
+                }
+            });
         }
 
         if(query.must_not) {
-            queryCommand.bool.must_not = {
+            queryCommand.bool.must_not = queryCommand.bool.must_not || [];
+            queryCommand.bool.must_not.push({
                 "match": {
                     "title": query.must_not
                 }
-            };
+            });
         }
 
     }
