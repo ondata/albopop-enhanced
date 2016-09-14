@@ -88,6 +88,12 @@ var composeQuery = function(query){
                     "size": 25
                 }
             },
+            "tags": {
+                "terms": {
+                    "field": "source.tags",
+                    "size": 0
+                }
+            },
             "locations": {
                 "terms": {
                     "field": "source.location",

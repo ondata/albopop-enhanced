@@ -53,6 +53,18 @@ $(function(){
         $container.toggle(!state);
     });
 
+    $must_tags.tagsinput({
+        typeaheadjs: {
+            source: function(query,cb) {
+                if (albopop.data && albopop.data.generalTags) {
+                    cb(_.filter(_.pluck(albopop.data.generalTags,'key'), function(t) { return t.toLowerCase().indexOf(query.toLowerCase()) > -1; }));
+                } else {
+                    cb([]);
+                }
+            }
+        }
+    });
+
 
     function updateRss() {
         var s = $must.val(),
@@ -72,7 +84,7 @@ $(function(){
             l = activeMarker;
         $.get("tracker/", { search: s, without: w, location: l });
     }
-    
+
     // connect to elasticsearch
     albopop.elastic = new elasticsearch.Client({
         host: [{
@@ -149,6 +161,7 @@ $(function(){
             albopop.data = {
                 generalListItems: response.hits.hits,
                 generalWordCloud: response.aggregations.words.buckets,
+                generalTags: response.aggregations.tags.buckets,
                 citiesWordClouds: response.aggregations.locations.buckets,
                 clusterWordClouds: response.aggregations.clusters.buckets
             };
