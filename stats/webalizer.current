@@ -1,0 +1,250 @@
+# Webalizer V2.23-05 Incremental Data - 09/26/2016 16:10:38
+2016 9 26 16 10 38
+254 108 13 32 4 10 5386351 50 12 1 0 0
+1 2 77 19 26
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+8 0 6032 3 4 3 0 0
+78 60 3520963 6 15 5 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+131 46 1846384 3 24 2 0 0
+35 2 11465 2 6 2 0 0
+2 0 1507 1 1 1 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+2 0 1508 1 0 0
+0 0 0 0 0 0
+2 0 1507 1 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+6 0 4522 2 0 0
+2 0 1508 1 0 0
+110 46 1844168 24 0 0
+121 62 3524845 15 0 0
+1 0 754 1 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+2 0 1507 1 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+3 0 2262 2 0 0
+5 0 3770 2 0 0
+0
+0
+0
+108
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+100
+0
+0
+0
+41
+0
+0
+5
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+# -urls- 
+/node_modules/topojson/build/topojson.min.js
+0 7 0 9176 0 0 0 0
+/node_modules/leaflet/dist/images/marker-icon.png
+1 2 0 4081 0 0 0 0
+/node_modules/leaflet/dist/leaflet.css
+0 7 0 9228 0 0 0 0
+/node_modules/bootstrap/dist/css/bootstrap.min.css.map
+0 2 0 203928 0 0 0 0
+/node_modules/d3-cloud/build/d3.layout.cloud.js
+0 7 0 16424 0 0 0 0
+/node_modules/jquery/dist/jquery.min.js
+0 7 0 91386 0 0 0 0
+/js/elasticsearch.js
+0 7 0 703304 0 0 0 0
+/assets/italy-regions.json
+0 7 0 1092496 0 0 0 0
+/node_modules/underscore/underscore-min.js
+0 7 0 19445 0 0 0 0
+/node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2
+0 7 0 55653 0 0 0 0
+/node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput-typeahead.css
+0 7 0 3185 0 0 0 0
+/node_modules/bootstrap/dist/css/bootstrap.min.css
+0 7 0 61110 0 0 0 0
+/node_modules/underscore/underscore-min.map
+0 2 0 55720 0 0 0 0
+/tracker/
+0 21 0 4908 0 1 0 0
+/js/main.js
+0 7 0 17651 0 0 0 0
+/node_modules/bootstrap-switch/dist/js/bootstrap-switch.min.js
+0 7 0 11942 0 0 0 0
+/node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js.map
+0 2 0 10284 0 0 0 0
+/
+0 7 0 12092 6 0 0 0
+/node_modules/leaflet/dist/leaflet.js
+0 7 0 102546 0 0 0 0
+/css/main.css
+0 7 0 3851 0 0 0 0
+/node_modules/bootstrap/dist/js/bootstrap.min.js
+0 7 0 31409 0 0 0 0
+/node_modules/font-awesome/css/font-awesome.min.css
+0 7 0 21872 0 0 0 0
+/node_modules/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css
+0 7 0 6106 0 0 0 0
+/js/query.js
+0 7 0 3995 0 0 0 0
+/node_modules/leaflet/dist/images/marker-shadow.png
+1 3 0 3269 0 0 0 0
+/node_modules/typeahead.js/dist/typeahead.jquery.min.js
+0 7 0 26507 0 0 0 0
+/assets/comuni.csv
+0 7 0 2372674 0 0 0 0
+/node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js
+0 7 0 11381 0 0 0 0
+/node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css
+0 7 0 3269 0 0 0 0
+/node_modules/font-awesome/fonts/fontawesome-webfont.woff2
+0 7 0 217261 0 0 0 0
+/node_modules/d3/d3.min.js
+0 7 0 162445 0 0 0 0
+/node_modules/leaflet/dist/images/marker-icon-2x.png
+1 1 0 4326 0 0 0 0
+# End Of Table - urls
+# -sites- (monthly)
+66.249.93.142
+0 1 0 754 1 1474328355 0 0
+-
+93.144.51.252
+0 8 0 6032 2 1474330624 0 0
+-
+54.174.114.150
+0 1 0 754 1 1474717372 0 0
+/
+82.91.89.157
+0 2 0 1508 1 1474361221 0 0
+-
+151.36.17.74
+0 5 0 3768 1 1474357807 0 0
+-
+66.249.66.30
+0 2 0 1507 1 1474769933 0 0
+/
+104.223.39.68
+0 1 0 754 0 0 0 0
+-
+66.249.93.141
+0 1 0 754 0 0 0 0
+-
+151.41.227.27
+0 162 48 1854834 2 1474795370 0 0
+/tracker/
+37.186.249.128
+0 33 28 1688725 1 1474367258 0 0
+/tracker/
+162.243.162.13
+0 1 0 754 0 0 0 0
+-
+79.0.92.129
+0 35 32 1824700 1 1474367184 0 0
+/tracker/
+66.249.66.24
+0 2 0 1507 1 1474906238 0 0
+/
+# End Of Table - sites (monthly)
+# -sites- (daily)
+66.249.66.24
+0 2 0 1507 1 1474906238 0 0
+/
+# End Of Table - sites (daily)
+# -referrers- 
+http://cerca.albopop.it/node_modules/font-awesome/css/font-awesome.min.css
+0 7
+- (Direct Request)
+0 43
+http://cerca.albopop.it/
+0 197
+http://cerca.albopop.it/node_modules/bootstrap/dist/css/bootstrap.min.css
+0 7
+# End Of Table - referrers
+# -agents- 
+Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.76 Mobile Safa
+0 1
+Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)
+0 4
+Slackbot-LinkExpanding 1.0 (+https://api.slack.com/robots)
+0 1
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.27 Safari/537.36
+0 8
+Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36
+0 2
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36
+0 162
+Mozilla/5.0 (Linux; Android 5.1; ASUS_Z00VD Build/LMY47I) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.98 Mobile S
+0 2
+Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36
+0 35
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36
+0 33
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.92 Safari/537.36
+0 6
+# End Of Table - agents
+# -search strings- 
+# End Of Table - search strings
+# -usernames- 
+albopop
+0 208 108 5352924 3 1474795370 0 0
+# End Of Table - usernames
