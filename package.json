@@ -1,6 +1,6 @@
 {
   "name": "albopop-enhanced",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "AlboPOP Enhanced",
   "main": "js/main.js",
   "scripts": {
@@ -23,11 +23,13 @@
   "dependencies": {
     "bootstrap": "^3.3.6",
     "bootstrap-switch": "^3.3.2",
+    "bootstrap-tagsinput": "^0.7.1",
     "d3": "^3.5.17",
     "d3-cloud": "git+https://github.com/jenkin/d3-cloud.git#feature/multi-center-wc",
     "font-awesome": "^4.6.3",
     "jquery": "^2.2.4",
     "leaflet": "^0.7.7",
+    "typeahead.js": "^0.11.1",
     "underscore": "^1.8.3"
   }
 }

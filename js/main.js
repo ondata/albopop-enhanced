@@ -32,6 +32,7 @@ $(function(){
         $inputs           = $form.find("input, button"),
         $must             = $("#must"),
         $must_not         = $("#must_not"),
+        $must_tags        = $("#must_tags"),
         $submit           = $("#btn-submit"),
         $reset            = $("#btn-reset"),
         $wordcloud        = $("#word-cloud-container"),
@@ -52,16 +53,29 @@ $(function(){
         $container.toggle(!state);
     });
 
+    $must_tags.tagsinput({
+        typeaheadjs: {
+            source: function(query,cb) {
+                if (albopop.data && albopop.data.generalTags) {
+                    cb(_.filter(_.pluck(albopop.data.generalTags,'key'), function(t) { return t.toLowerCase().indexOf(query.toLowerCase()) > -1; }));
+                } else {
+                    cb([]);
+                }
+            }
+        }
+    });
+
 
     function updateRss() {
         var s = $must.val(),
             w = $must_not.val(),
+            t = $must_tags.tagsinput("items"),
             l = activeMarker;
-        $rss.attr("href", buildRss(s,w,l));
+        $rss.attr("href", buildRss(s,w,t,l));
     }
 
-    function buildRss(s,w,l) {
-        return "feed/?search="+(s||"")+"&without="+(w||"")+"&location="+(l||"");
+    function buildRss(s,w,t,l) {
+        return "feed/?search="+(s||"")+"&without="+(w||"")+"&location="+(l||"")+"&tags="+(t?t.join(","):"");
     }
 
     function track() {
@@ -70,7 +84,7 @@ $(function(){
             l = activeMarker;
         $.get("tracker/", { search: s, without: w, location: l });
     }
-    
+
     // connect to elasticsearch
     albopop.elastic = new elasticsearch.Client({
         host: [{
@@ -116,6 +130,7 @@ $(function(){
         // extract query
         var query = {
                "must": $must.val(),
+               "must_tags": $must_tags.tagsinput("items"),
                "must_not": $must_not.val()
             };
         
@@ -129,6 +144,7 @@ $(function(){
         // ask elasticsearch
         albopop.elastic.search({
             index: indices,
+            ignoreUnavailable: true,
             type: "rss_item",
             body: composeQuery(query)
         }, function(error, response){
@@ -145,6 +161,7 @@ $(function(){
             albopop.data = {
                 generalListItems: response.hits.hits,
                 generalWordCloud: response.aggregations.words.buckets,
+                generalTags: response.aggregations.tags.buckets,
                 citiesWordClouds: response.aggregations.locations.buckets,
                 clusterWordClouds: response.aggregations.clusters.buckets
             };
@@ -452,6 +469,7 @@ $(function(){
         $body.empty();
         albopop.elastic.search({
             index: indices,
+            ignoreUnavailable: true,
             type: "rss_item",
             body: {
                 "query": {
@@ -613,20 +631,19 @@ $(function(){
             .text(function(d){ return d.text });
     }
 });
-
 var getDates = function(startDate, endDate) {
-  var dates = [],
-      currentDate = startDate,
-      addDays = function(days) {
-        var date = new Date(this.valueOf());
-        date.setDate(date.getDate() + days);
-        return date;
-      };
-  while (currentDate <= endDate) {
-    dates.push(currentDate);
-    currentDate = addDays.call(currentDate, 1);
-  }
-  return dates;
+    var dates = [],
+        currentDate = startDate,
+        addDays = function(days) {
+            var date = new Date(this.valueOf());
+            date.setDate(date.getDate() + days);
+            return date;       
+        };
+    while (currentDate <= endDate) {
+        dates.push(currentDate);
+        currentDate = addDays.call(currentDate, 1);
+    }
+    return dates;
 };
 
 var addDays = function(date, days) {
