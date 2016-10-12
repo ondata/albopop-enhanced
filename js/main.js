@@ -331,10 +331,11 @@ $(function(){
     function populateMap(items) {
         // draw new markers
         _.each(items, function(city){
-            var cityName = city.key;
-            var cityLat  = _.has(albopop.poi,cityName) ? albopop.poi[cityName].lat : 0;
-            var cityLon  = _.has(albopop.poi,cityName) ? albopop.poi[cityName].lon : 0;
-            
+            var cityName = city.hits.hits.hits[0]["_source"].tags.filter(function(el) { return el.indexOf("channel-category-municipality") === 0; })[0].split(/:(.+)?/)[1] || city.key;
+            var cityLat  = +city.hits.hits.hits[0]["_source"].tags.filter(function(el) { return el.indexOf("channel-category-latitude") === 0; })[0].split(/:(.+)?/)[1] || (_.has(albopop.poi,cityName) ? albopop.poi[cityName].lat : 0);
+            var cityLon  = +city.hits.hits.hits[0]["_source"].tags.filter(function(el) { return el.indexOf("channel-category-longitude") === 0; })[0].split(/:(.+)?/)[1] || (_.has(albopop.poi,cityName) ? albopop.poi[cityName].lon : 0);
+           
+            console.log(cityName, cityLat, cityLon);
             if (cityLat && cityLon) {
                 var marker = L.marker(
                         [cityLat, cityLon],
@@ -366,7 +367,7 @@ $(function(){
                             '<div class="similar-plus"><a href="#"><span class="glyphicon glyphicon-plus"></span></a></div>' +
                             '<h4 class="list-group-item-heading">Da ' + d.source.title + ' il ' + d['@timestamp'] + '</h4>' +
                             '<p class="list-group-item-text">' + d.title + '</p>' +
-                            '<p class="list-group-item-tags">'+d.source.tags.map(function(t) { return '<span class="label label-info">'+t+'</span>'; })+'</p>' + 
+                            (d.tags ? '<p class="list-group-item-tags">'+d.tags.map(function(t) { return '<span class="label label-info" title="'+t+'">'+(t.indexOf(":")>-1?t.split(/:(.+)?/)[1]:t)+'</span>'; }).join(" ")+'</p>' : "") + 
                     '';
                 });
             d3.select($list[0]).selectAll("a")
@@ -500,7 +501,7 @@ $(function(){
                     return '' + 
                             '<h4 class="list-group-item-heading">Da ' + d.source.title + ' il ' + d['@timestamp'] + '</h4>' +
                             '<p class="list-group-item-text">' + d.title + '</p>' +
-                            '<p class="list-group-item-tags">'+d.source.tags.map(function(t) { return '<span class="label label-info">'+t+'</span>'; })+'</p>' + 
+                            (d.tags ? '<p class="list-group-item-tags">'+d.tags.map(function(t) { return '<span class="label label-info" title="'+t+'">'+(t.indexOf(":")>-1?t.split(/:(.+)?/)[1]:t)+'</span>'; }).join(" ")+'</p>' : "") + 
                     '';
                 });
 
@@ -524,7 +525,7 @@ $(function(){
             // prepare data
             var cityName = this.options.title;
             var cityData = _.find(albopop.data.citiesWordClouds, function(c){
-                return (c.key == cityName);
+                return (c.key.toLowerCase().indexOf(cityName.toLowerCase())>-1);
             });
             var cityWords = cityData.words.buckets;
             var cityDocs  = cityData.hits.hits.hits;

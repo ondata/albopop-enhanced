@@ -1,0 +1,167 @@
+{
+  "template": "albopop-v3-*",
+  "settings": {
+    "index": {
+      "analysis": {
+        "filter": {
+          "length_filter": {
+            "type": "length",
+            "min": "3"
+          },
+          "only_alphanumeric": {
+            "pattern": "[^A-Za-zàèéìòù]",
+            "type": "pattern_replace",
+            "replacement": ""
+          },
+          "italian_elision": {
+            "type": "elision",
+            "articles": [
+              "c",
+              "l",
+              "all",
+              "dall",
+              "dell",
+              "nell",
+              "sull",
+              "coll",
+              "pell",
+              "gl",
+              "agl",
+              "dagl",
+              "degl",
+              "negl",
+              "sugl",
+              "un",
+              "m",
+              "t",
+              "s",
+              "v",
+              "d"
+            ]
+          },
+          "italian_stemmer": {
+            "type": "stemmer",
+            "language": "light_italian"
+          },
+          "no_number": {
+            "pattern": "^(?:[0-9]+[.,]?[0-9]*)(?:[.,]?[0-9]*)?$",
+            "type": "pattern_replace",
+            "replacement": ""
+          },
+          "italian_stop": {
+            "type": "stop",
+            "stopwords": "_italian_"
+          }
+        },
+        "analyzer": {
+          "custom_it": {
+            "filter": [
+              "lowercase",
+              "italian_elision",
+              "only_alphanumeric",
+              "italian_stop",
+              "length_filter",
+              "italian_stemmer"
+            ],
+            "char_filter": [
+              "no_url",
+              "no_punctuation"
+            ],
+            "type": "custom",
+            "tokenizer": "whitespace"
+          }
+        },
+        "char_filter": {
+          "no_punctuation": {
+            "pattern": "[^A-Za-z0-9àèéìòù.']",
+            "type": "pattern_replace",
+            "replacement": " "
+          },
+          "no_url": {
+            "pattern": "http[^ ]+",
+            "type": "pattern_replace",
+            "replacement": ""
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+    "rss_item": {
+      "properties": {
+        "author": {
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "link": {
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "id": {
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "type": {
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "cluster": {
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "source": {
+          "properties": {
+            "link": {
+              "index": "not_analyzed",
+              "type": "string"
+            },
+            "location": {
+              "index": "not_analyzed",
+              "type": "string"
+            },
+            "id": {
+              "index": "not_analyzed",
+              "type": "string"
+            },
+            "title": {
+              "index": "not_analyzed",
+              "type": "string"
+            },
+            "type": {
+              "index": "not_analyzed",
+              "type": "string"
+            },
+            "updated": {
+              "index": "not_analyzed",
+              "type": "string"
+            },
+            "tags": {
+              "index": "not_analyzed",
+              "type": "string"
+            }
+          }
+        },
+        "tags": {
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "message": {
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "title": {
+          "analyzer": "custom_it",
+          "type": "string"
+        },
+        "updated": {
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "Feed": {
+          "index": "not_analyzed",
+          "type": "string"
+        }
+      }
+    }
+  }
+}
