@@ -330,6 +330,7 @@ $(function(){
 
     function populateMap(items) {
         // draw new markers
+        try {
         _.each(items, function(city){
             var cityName = city.hits.hits.hits[0]["_source"].tags.filter(function(el) { return el.indexOf("channel-category-municipality") === 0; })[0].split(/:(.+)?/)[1] || city.key;
             var cityLat  = +city.hits.hits.hits[0]["_source"].tags.filter(function(el) { return el.indexOf("channel-category-latitude") === 0; })[0].split(/:(.+)?/)[1] || (_.has(albopop.poi,cityName) ? albopop.poi[cityName].lat : 0);
@@ -349,6 +350,8 @@ $(function(){
                 albopop.markers.push(marker);
             }
         });
+        } catch (err) {
+        }
     }
 
     function populateList(items) {

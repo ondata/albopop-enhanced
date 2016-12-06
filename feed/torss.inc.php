@@ -31,11 +31,11 @@ function toRss($results) {
 		$item = new Item();
 
 		$item
-			->title("[" . $doc['source']['location'] . "] " . $title . ($title == $doc['title'] ? "" : "..."))
+			->title("[" . $doc['source']['title'] . "] " . $title . ($title == $doc['title'] ? "" : "..."))
             ->description($doc['title']);
 
-        if (isset($doc['source']['tags'])) {
-            foreach ($doc['source']['tags'] as $tag) {
+        if (isset($doc['tags'])) {
+            foreach ($doc['tags'] as $tag) {
                 $item->category($tag);
             }
         }
