@@ -25,7 +25,7 @@ var composeQuery = function(query){
             queryCommand.bool.must = queryCommand.bool.must || [];
             queryCommand.bool.must.push({
                 "terms": {
-                    "source.tags": query.must_tags
+                    "tags": query.must_tags
                 }
             });
         }
@@ -90,13 +90,13 @@ var composeQuery = function(query){
             },
             "tags": {
                 "terms": {
-                    "field": "source.tags",
+                    "field": "tags",
                     "size": 0
                 }
             },
             "locations": {
                 "terms": {
-                    "field": "source.location",
+                    "field": "source.title",
                     "size": 0
                 },
                 "aggs": {
